@@ -44,4 +44,35 @@
         <tag>随笔</tag>
       </tags>
   </entry>
+  <entry>
+    <title>荔枝派!树莓派!开坑记录</title>
+    <url>/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/</url>
+    <content><![CDATA[<blockquote>
+<h6 id="好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。"><a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="headerlink" title="好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。"></a>好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。</h6></blockquote>
+<a id="more"></a>
+
+<h2 id="荔枝派nano"><a href="#荔枝派nano" class="headerlink" title="荔枝派nano"></a>荔枝派nano</h2><p>​        这算是我第一次接触的arm开发板，这块板子没有太多的资料，感觉对我这种新手极度不友好。不过通过第一次玩板子我第一了解到了flash，TTL串口，嵌入式主板引导程序Uboot，交叉编译工具链。</p>
+<p>目前准备填的坑(咕):</p>
+<ol>
+<li>将Uboot重新编译来完成对flash的分区，将linux装到flash上(之前是装到sd卡上的)。</li>
+<li>学习qt或littleGL，尝试给开发板写个简单的可交互的图形界面。</li>
+<li>尝试自己通过源码编译一下linux内核。</li>
+<li>尝试用这个开发板音频解码，播放音乐和视频。</li>
+</ol>
+<h2 id="树莓派"><a href="#树莓派" class="headerlink" title="树莓派"></a>树莓派</h2><p>​        有了荔枝派的铺垫，树莓派的操作就显得特别简单了，如手后先装了ubuntu-server，之后安装了nginx搭建起来了网站，顺便把自动填报得脚本也挂了上去。由于安装的是64位系统,WiringPi没有对应安装包，无法对引脚进行编程，于是在<a href="https://github.com/WiringPi/WiringPi">官方github</a>下载源码重新编译了一个。</p>
+<p>目前准备填的坑：</p>
+<ol>
+<li>让树莓派通过wifi联网，由于用的是ubuntu的64位官方支持不是那么友好，尝试修改boot或直接连接都失败了(也可能是我wifi的问题)。</li>
+<li>对引脚进行编程，尝试控制一下LED灯之类的小东西。</li>
+<li>发现更多的新坑。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>树莓派</category>
+        <category>荔枝派</category>
+      </categories>
+      <tags>
+        <tag>水果派</tag>
+      </tags>
+  </entry>
 </search>
