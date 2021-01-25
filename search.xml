@@ -1,213 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/05/18/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<a id="more"></a>
-
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>我的2020与2021</title>
-    <url>/2021/01/01/%E6%88%91%E7%9A%842020%E4%B8%8E2021/</url>
-    <content><![CDATA[<blockquote>
-<p>2020年算是比较特殊的一年吧，发生了许许多多的事情。</p>
-<a id="more"></a>
-</blockquote>
-<h1 id="2020我做了什么有趣的事？"><a href="#2020我做了什么有趣的事？" class="headerlink" title="2020我做了什么有趣的事？"></a>2020我做了什么有趣的事？</h1><ul>
-<li><p>购买服务器搭建自己的博客。</p>
-</li>
-<li><p>购置树莓派并进行折腾。</p>
-</li>
-<li><p>尝试不同的linux发行版，manjaro，ubuntu，deepin…….</p>
-</li>
-<li><p>参加工作室项目，用django编写后端并完成任务。</p>
-</li>
-<li><p>结识新的志同道合的朋友。</p>
-<h5 id="追番"><a href="#追番" class="headerlink" title="追番"></a>追番</h5><p>​        《超炮》《RE:0》《公主连结》《辉夜》《成神》《魔女之旅》《春物》</p>
-<h5 id="补番"><a href="#补番" class="headerlink" title="补番"></a>补番</h5><p>​        《地下城邂逅》《机器人笔记》《relife》《Re:creator》《路人女主》</p>
-<h5 id="打游戏"><a href="#打游戏" class="headerlink" title="打游戏"></a>打游戏</h5><p>​        《原神》《CSGO》《求生之路》《OSU!》《战争雷霆》《崩崩崩》</p>
-</li>
-</ul>
-<h1 id="2021我又准备去做什么呢？"><a href="#2021我又准备去做什么呢？" class="headerlink" title="2021我又准备去做什么呢？"></a>2021我又准备去做什么呢？</h1><blockquote>
-<p>第一次感觉到过去的一年充满了遗憾。在番剧里《春物》《刀剑》《成神》一个一个打破了大家对神作的幻想。在现实中，一次一次的刷新历史的事件也在不断发生。对与自己的发展，我也在不断的摸索与碰壁。不管怎么说2020这一年，我又成功的划水划了过来。虽然有些遗憾但就让今年的我用发展，继续去解决吧。</p>
-</blockquote>
-<h5 id="今年可能要干的有趣的事情"><a href="#今年可能要干的有趣的事情" class="headerlink" title="今年可能要干的有趣的事情"></a>今年可能要干的有趣的事情</h5><ul>
-<li>工作室的小程序已经上线，但是还有许多功能尚没有完善，还得学习相关知识继续去完善。</li>
-<li>数模竞赛的小队已经组建了起来，今年就要尝试去一起学习和参加比赛了。</li>
-<li>继续折腾我的树莓派。</li>
-<li>后端除了用python也想尝试一下go语言。</li>
-</ul>
-<h5 id="今年还会干的有趣的事情"><a href="#今年还会干的有趣的事情" class="headerlink" title="今年还会干的有趣的事情"></a>今年还会干的有趣的事情</h5><p>​    追番，补番，打游戏</p>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>用matlab训练一个BP神经网络</title>
+      <link href="/2021/01/24/%E7%94%A8matlab%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AABP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/"/>
+      <url>/2021/01/24/%E7%94%A8matlab%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AABP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>BP神经网络</p><p>是一种按照误差逆向传播算法训练的多层前馈神经网络，是应用最广泛的神经网络。</p><a id="more"></a><p><a href="https://baike.baidu.com/item/人工神经网络">人工神经网络</a>无需事先确定输入输出之间映射关系的数学方程，仅通过自身的训练，学习某种规则，在给定输入值时得到最接近期望输出值的结果。作为一种智能信息处理系统，人工神经网络实现其功能的核心是算法。BP神经网络是一种按误差反向传播(简称误差反传)训练的多层前馈网络，其算法称为<a href="https://baike.baidu.com/item/BP算法">BP算法</a>，它的基本思想是梯度下降法，利用梯度搜索技术，以期使网络的实际输出值和期望输出值的误差均方差为最小。</p><p>基本BP算法包括信号的前向传播和误差的反向传播两个过程。即计算误差输出时按从输入到输出的方向进行，而调整权值和阈值则从输出到输入的方向进行。正向传播时，输入信号通过隐含层作用于输出节点，经过非线性变换，产生输出信号，若实际输出与期望输出不相符，则转入误差的反向传播过程。误差反传是将输出误差通过隐含层向输入层逐层反传，并将误差分摊给各层所有单元，以从各层获得的误差信号作为调整各单元权值的依据。通过调整输入节点与隐层节点的联接强度和隐层节点与输出节点的联接强度以及阈值，使误差沿梯度方向下降，经过反复学习训练，确定与最小误差相对应的网络参数(权值和阈值)，训练即告停止。此时经过训练的神经网络即能对类似样本的输入信息，自行处理输出误差最小的经过非线形转换的信息。</p><p>BP网络是在输入层与输出层之间增加若干层(一层或多层)神经元，这些神经元称为隐单元，它们与外界没有直接的联系，但其状态的改变，则能影响输入与输出之间的关系，每一层可以有若干个节点。</p><p>BP神经网络的计算过程由正向计算过程和反向计算过程组成。正向传播过程，输入模式从输入层经隐单元层逐层处理，并转向输出层，每～层神经元的状态只影响下一层神经元的状态。如果在输出层不能得到期望的输出，则转入反向传播，将误差信号沿原来的连接通路返回，通过修改各神经元的权值，使得误差信号最小。</p><p>1．网络状态初始化</p><p>2．前向计算过程</p></blockquote><h3 id="首先使用newff函数建立一个BP神经网络"><a href="#首先使用newff函数建立一个BP神经网络" class="headerlink" title="首先使用newff函数建立一个BP神经网络"></a>首先使用newff函数建立一个BP神经网络</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net = newff(PR,[S1,S2,...SN],&#123;TF1,TF2&#125;,BTF,BLF,PF)</span><br></pre></td></tr></table></figure><ul><li>PR : Rx2矩阵，定义输入向量的最大最小值</li><li>Si   : 第i层神经元个数</li><li>TF  : 传递函数</li><li>BTF : 训练函数</li><li>BLF ： 权值/阈值学习函数</li><li>PF : 性能函数 </li></ul><h3 id="设置相关的训练参数"><a href="#设置相关的训练参数" class="headerlink" title="设置相关的训练参数"></a>设置相关的训练参数</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">net.trainParam.show = <span class="number">10</span>; <span class="comment">%显示间隔次数</span></span><br><span class="line">net.trainParam.lr = <span class="number">0.05</span>; <span class="comment">%学习率，决定收敛速度 ，收敛效果</span></span><br><span class="line">net.trainParam.goal = <span class="number">1e-10</span>; <span class="comment">%训练目标</span></span><br><span class="line">net.trainParam.epochs = <span class="number">50000</span>; <span class="comment">%训练次数</span></span><br></pre></td></tr></table></figure><p>算法的选择</p><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">net.trainFcn = <span class="string">'traingd'</span>; <span class="comment">% 梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingdm'</span>; <span class="comment">% 动量梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingda'</span>; <span class="comment">% 变学习率梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingdx'</span>; <span class="comment">% 变学习率动量梯度下降算法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (大型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainrp'</span>; <span class="comment">% RPROP(弹性BP)算法,内存需求最小</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% 共轭梯度算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgf'</span>; <span class="comment">%Fletcher-Reeves修正算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgp'</span>; <span class="comment">%Polak-Ribiere修正算法,内存需求比Fletcher-Reeves修正算法略大</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgb'</span>; <span class="comment">% Powell-Beal复位算法,内存需求比Polak-Ribiere修正算法略大</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (大型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainscg'</span>; <span class="comment">% ScaledConjugate Gradient算法,内存需求与Fletcher-Reeves修正算法相同,计算量比上面三种算法都小很多</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainbfg'</span>; <span class="comment">%Quasi-Newton Algorithms - BFGS Algorithm,计算量和内存需求均比共轭梯度算法大,但收敛比较快</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainoss'</span>; <span class="comment">% OneStep Secant Algorithm,计算量和内存需求均比BFGS算法小,比共轭梯度算法略大</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (中型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainlm'</span>; <span class="comment">%Levenberg-Marquardt算法,内存需求最大,收敛速度最快</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainbr'</span>; <span class="comment">% 贝叶斯正则化算法</span></span><br><span class="line"></span><br><span class="line"> 有代表性的五种算法为:<span class="string">'traingdx'</span>,<span class="string">'trainrp'</span>,<span class="string">'trainscg'</span>,<span class="string">'trainoss'</span>, <span class="string">'trainlm'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%在这里一般是选取'trainlm'函数来训练，其算对对应的是Levenberg-Marquardt算法</span></span><br></pre></td></tr></table></figure><h3 id="传入数据开始训练"><a href="#传入数据开始训练" class="headerlink" title="传入数据开始训练"></a>传入数据开始训练</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net = train(net,p,goal);<span class="comment">%net网络模型 p输入数据 goal期望输出</span></span><br></pre></td></tr></table></figure><h3 id="对模型进行预测"><a href="#对模型进行预测" class="headerlink" title="对模型进行预测"></a>对模型进行预测</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y=sim(net,x)</span><br></pre></td></tr></table></figure><h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">clear</span><br><span class="line">p1=[<span class="number">1.24</span>,<span class="number">1.27</span>;<span class="number">1.36</span>,<span class="number">1.74</span>;<span class="number">1.38</span>,<span class="number">1.64</span>;<span class="number">1.38</span>,<span class="number">1.82</span>;<span class="number">1.38</span>,<span class="number">1.90</span>;</span><br><span class="line"><span class="number">1.40</span>,<span class="number">1.70</span>;<span class="number">1.48</span>,<span class="number">1.82</span>;<span class="number">1.54</span>,<span class="number">1.82</span>;<span class="number">1.56</span>,<span class="number">2.08</span>];</span><br><span class="line">p2=[<span class="number">1.14</span>,<span class="number">1.82</span>;<span class="number">1.18</span>,<span class="number">1.96</span>;<span class="number">1.20</span>,<span class="number">1.86</span>;<span class="number">1.26</span>,<span class="number">2.00</span></span><br><span class="line"><span class="number">1.28</span>,<span class="number">2.00</span>;<span class="number">1.30</span>,<span class="number">1.96</span>];</span><br><span class="line">p=[p1;p2]';</span><br><span class="line">pr=minmax(p);</span><br><span class="line">goal=[<span class="built_in">ones</span>(<span class="number">1</span>,<span class="number">9</span>),<span class="built_in">zeros</span>(<span class="number">1</span>,<span class="number">6</span>);<span class="built_in">zeros</span>(<span class="number">1</span>,<span class="number">9</span>),<span class="built_in">ones</span>(<span class="number">1</span>,<span class="number">6</span>)];</span><br><span class="line"><span class="built_in">plot</span>(p1(:,<span class="number">1</span>),p1(:,<span class="number">2</span>),<span class="string">'h'</span>,p2(:,<span class="number">1</span>),p2(:,<span class="number">2</span>),<span class="string">'o'</span>)</span><br><span class="line">net=newff(pr,[<span class="number">3</span>,<span class="number">2</span>],&#123;<span class="string">'logsig'</span>,<span class="string">'logsig'</span>&#125;);</span><br><span class="line">net.trainParam.show = <span class="number">10</span>;</span><br><span class="line">net.trainParam.lr = <span class="number">0.05</span>;</span><br><span class="line">net.trainParam.goal = <span class="number">1e-10</span>;</span><br><span class="line">net.trainParam.epochs = <span class="number">50000</span>;</span><br><span class="line">net = train(net,p,goal);</span><br><span class="line">x=[<span class="number">1.24</span> <span class="number">1.80</span>;<span class="number">1.28</span> <span class="number">1.84</span>;<span class="number">1.40</span> <span class="number">2.04</span>]';</span><br><span class="line">y0=sim(net,p)</span><br><span class="line">y=sim(net,x)</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>随笔</category>
+          
+          <category> 数模竞赛笔记 </category>
+          
       </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>荔枝派!树莓派!开坑记录</title>
-    <url>/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/</url>
-    <content><![CDATA[<blockquote>
-<h6 id="好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。"><a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="headerlink" title="好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。"></a>好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。</h6></blockquote>
-<a id="more"></a>
-
-<h2 id="荔枝派nano"><a href="#荔枝派nano" class="headerlink" title="荔枝派nano"></a>荔枝派nano</h2><p>​        这算是我第一次接触的arm开发板，这块板子没有太多的资料，感觉对我这种新手极度不友好。不过通过第一次玩板子我第一了解到了flash，TTL串口，嵌入式主板引导程序Uboot，交叉编译工具链。</p>
-<p>目前准备填的坑(咕):</p>
-<ol>
-<li>将Uboot重新编译来完成对flash的分区，将linux装到flash上(之前是装到sd卡上的)。</li>
-<li>学习qt或littleGL，尝试给开发板写个简单的可交互的图形界面。</li>
-<li>尝试自己通过源码编译一下linux内核。</li>
-<li>尝试用这个开发板音频解码，播放音乐和视频。</li>
-</ol>
-<h2 id="树莓派"><a href="#树莓派" class="headerlink" title="树莓派"></a>树莓派</h2><p>​        有了荔枝派的铺垫，树莓派的操作就显得特别简单了，如手后先装了ubuntu-server，之后安装了nginx搭建起来了网站，顺便把自动填报得脚本也挂了上去。由于安装的是64位系统,WiringPi没有对应安装包，无法对引脚进行编程，于是在<a href="https://github.com/WiringPi/WiringPi">官方github</a>下载源码重新编译了一个。</p>
-<p>目前准备填的坑：</p>
-<ol>
-<li>让树莓派通过wifi联网，由于用的是ubuntu的64位官方支持不是那么友好，尝试修改boot或直接连接都失败了(也可能是我wifi的问题)。</li>
-<li>对引脚进行编程，尝试控制一下LED灯之类的小东西。</li>
-<li>发现更多的新坑。</li>
-</ol>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> matlab </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>我的2020与2021</title>
+      <link href="/2021/01/01/%E6%88%91%E7%9A%842020%E4%B8%8E2021/"/>
+      <url>/2021/01/01/%E6%88%91%E7%9A%842020%E4%B8%8E2021/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>2020年算是比较特殊的一年吧，发生了许许多多的事情。</p><a id="more"></a></blockquote><h1 id="2020我做了什么有趣的事？"><a href="#2020我做了什么有趣的事？" class="headerlink" title="2020我做了什么有趣的事？"></a>2020我做了什么有趣的事？</h1><ul><li><p>购买服务器搭建自己的博客。</p></li><li><p>购置树莓派并进行折腾。</p></li><li><p>尝试不同的linux发行版，manjaro，ubuntu，deepin…….</p></li><li><p>参加工作室项目，用django编写后端并完成任务。</p></li><li><p>结识新的志同道合的朋友。</p><h5 id="追番"><a href="#追番" class="headerlink" title="追番"></a>追番</h5><p>​        《超炮》《RE:0》《公主连结》《辉夜》《成神》《魔女之旅》《春物》</p><h5 id="补番"><a href="#补番" class="headerlink" title="补番"></a>补番</h5><p>​        《地下城邂逅》《机器人笔记》《relife》《Re:creator》《路人女主》</p><h5 id="打游戏"><a href="#打游戏" class="headerlink" title="打游戏"></a>打游戏</h5><p>​        《原神》《CSGO》《求生之路》《OSU!》《战争雷霆》《崩崩崩》</p></li></ul><h1 id="2021我又准备去做什么呢？"><a href="#2021我又准备去做什么呢？" class="headerlink" title="2021我又准备去做什么呢？"></a>2021我又准备去做什么呢？</h1><blockquote><p>第一次感觉到过去的一年充满了遗憾。在番剧里《春物》《刀剑》《成神》一个一个打破了大家对神作的幻想。在现实中，一次一次的刷新历史的事件也在不断发生。对与自己的发展，我也在不断的摸索与碰壁。不管怎么说2020这一年，我又成功的划水划了过来。虽然有些遗憾但就让今年的我用发展，继续去解决吧。</p></blockquote><h5 id="今年可能要干的有趣的事情"><a href="#今年可能要干的有趣的事情" class="headerlink" title="今年可能要干的有趣的事情"></a>今年可能要干的有趣的事情</h5><ul><li>工作室的小程序已经上线，但是还有许多功能尚没有完善，还得学习相关知识继续去完善。</li><li>数模竞赛的小队已经组建了起来，今年就要尝试去一起学习和参加比赛了。</li><li>继续折腾我的树莓派。</li><li>后端除了用python也想尝试一下go语言。</li></ul><h5 id="今年还会干的有趣的事情"><a href="#今年还会干的有趣的事情" class="headerlink" title="今年还会干的有趣的事情"></a>今年还会干的有趣的事情</h5><p>​    追番，补番，打游戏</p>]]></content>
+      
+      
       <categories>
-        <category>树莓派</category>
-        <category>荔枝派</category>
+          
+          <category> 随笔 </category>
+          
       </categories>
-      <tags>
-        <tag>水果派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>用matlab训练一个BP神经网络</title>
-    <url>/2021/01/24/%E7%94%A8matlab%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AABP%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/</url>
-    <content><![CDATA[<blockquote>
-<p>BP神经网络</p>
-<p>是一种按照误差逆向传播算法训练的多层前馈神经网络，是应用最广泛的神经网络。</p>
-<a id="more"></a>
-
-<p><a href="https://baike.baidu.com/item/人工神经网络">人工神经网络</a>无需事先确定输入输出之间映射关系的数学方程，仅通过自身的训练，学习某种规则，在给定输入值时得到最接近期望输出值的结果。作为一种智能信息处理系统，人工神经网络实现其功能的核心是算法。BP神经网络是一种按误差反向传播(简称误差反传)训练的多层前馈网络，其算法称为<a href="https://baike.baidu.com/item/BP算法">BP算法</a>，它的基本思想是梯度下降法，利用梯度搜索技术，以期使网络的实际输出值和期望输出值的误差均方差为最小。</p>
-<p>基本BP算法包括信号的前向传播和误差的反向传播两个过程。即计算误差输出时按从输入到输出的方向进行，而调整权值和阈值则从输出到输入的方向进行。正向传播时，输入信号通过隐含层作用于输出节点，经过非线性变换，产生输出信号，若实际输出与期望输出不相符，则转入误差的反向传播过程。误差反传是将输出误差通过隐含层向输入层逐层反传，并将误差分摊给各层所有单元，以从各层获得的误差信号作为调整各单元权值的依据。通过调整输入节点与隐层节点的联接强度和隐层节点与输出节点的联接强度以及阈值，使误差沿梯度方向下降，经过反复学习训练，确定与最小误差相对应的网络参数(权值和阈值)，训练即告停止。此时经过训练的神经网络即能对类似样本的输入信息，自行处理输出误差最小的经过非线形转换的信息。</p>
-<p>BP网络是在输入层与输出层之间增加若干层(一层或多层)神经元，这些神经元称为隐单元，它们与外界没有直接的联系，但其状态的改变，则能影响输入与输出之间的关系，每一层可以有若干个节点。</p>
-<p>BP神经网络的计算过程由正向计算过程和反向计算过程组成。正向传播过程，输入模式从输入层经隐单元层逐层处理，并转向输出层，每～层神经元的状态只影响下一层神经元的状态。如果在输出层不能得到期望的输出，则转入反向传播，将误差信号沿原来的连接通路返回，通过修改各神经元的权值，使得误差信号最小。</p>
-<p>1．网络状态初始化</p>
-<p>2．前向计算过程</p>
-</blockquote>
-<h3 id="首先使用newff函数建立一个BP神经网络"><a href="#首先使用newff函数建立一个BP神经网络" class="headerlink" title="首先使用newff函数建立一个BP神经网络"></a>首先使用newff函数建立一个BP神经网络</h3><figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">net = newff(PR,[S1,S2,...SN],&#123;TF1,TF2&#125;,BTF,BLF,PF)</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>PR : Rx2矩阵，定义输入向量的最大最小值</li>
-<li>Si   : 第i层神经元个数</li>
-<li>TF  : 传递函数</li>
-<li>BTF : 训练函数</li>
-<li>BLF ： 权值/阈值学习函数</li>
-<li>PF : 性能函数 </li>
-</ul>
-<h3 id="设置相关的训练参数"><a href="#设置相关的训练参数" class="headerlink" title="设置相关的训练参数"></a>设置相关的训练参数</h3><figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">net.trainParam.show = <span class="number">10</span>; <span class="comment">%显示间隔次数</span></span><br><span class="line">net.trainParam.lr = <span class="number">0.05</span>; <span class="comment">%学习率，决定收敛速度 ，收敛效果</span></span><br><span class="line">net.trainParam.goal = <span class="number">1e-10</span>; <span class="comment">%训练目标</span></span><br><span class="line">net.trainParam.epochs = <span class="number">50000</span>; <span class="comment">%训练次数</span></span><br></pre></td></tr></table></figure>
-
-<p>算法的选择</p>
-<figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">net.trainFcn = <span class="string">'traingd'</span>; <span class="comment">% 梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingdm'</span>; <span class="comment">% 动量梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingda'</span>; <span class="comment">% 变学习率梯度下降算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traingdx'</span>; <span class="comment">% 变学习率动量梯度下降算法</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (大型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainrp'</span>; <span class="comment">% RPROP(弹性BP)算法,内存需求最小</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% 共轭梯度算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgf'</span>; <span class="comment">%Fletcher-Reeves修正算法</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgp'</span>; <span class="comment">%Polak-Ribiere修正算法,内存需求比Fletcher-Reeves修正算法略大</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'traincgb'</span>; <span class="comment">% Powell-Beal复位算法,内存需求比Polak-Ribiere修正算法略大</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (大型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainscg'</span>; <span class="comment">% ScaledConjugate Gradient算法,内存需求与Fletcher-Reeves修正算法相同,计算量比上面三种算法都小很多</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainbfg'</span>; <span class="comment">%Quasi-Newton Algorithms - BFGS Algorithm,计算量和内存需求均比共轭梯度算法大,但收敛比较快</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainoss'</span>; <span class="comment">% OneStep Secant Algorithm,计算量和内存需求均比BFGS算法小,比共轭梯度算法略大</span></span><br><span class="line"></span><br><span class="line"><span class="comment">% (中型网络的首选算法)</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainlm'</span>; <span class="comment">%Levenberg-Marquardt算法,内存需求最大,收敛速度最快</span></span><br><span class="line"></span><br><span class="line">net.trainFcn = <span class="string">'trainbr'</span>; <span class="comment">% 贝叶斯正则化算法</span></span><br><span class="line"></span><br><span class="line"> 有代表性的五种算法为:<span class="string">'traingdx'</span>,<span class="string">'trainrp'</span>,<span class="string">'trainscg'</span>,<span class="string">'trainoss'</span>, <span class="string">'trainlm'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">%在这里一般是选取'trainlm'函数来训练，其算对对应的是Levenberg-Marquardt算法</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="传入数据开始训练"><a href="#传入数据开始训练" class="headerlink" title="传入数据开始训练"></a>传入数据开始训练</h3><figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">net = train(net,p,goal);<span class="comment">%net网络模型 p输入数据 goal期望输出</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="对模型进行预测"><a href="#对模型进行预测" class="headerlink" title="对模型进行预测"></a>对模型进行预测</h3><figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">y=sim(net,x)</span><br></pre></td></tr></table></figure>
-
-<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><figure class="highlight matlab"><table><tr><td class="code"><pre><span class="line">clear</span><br><span class="line">p1=[<span class="number">1.24</span>,<span class="number">1.27</span>;<span class="number">1.36</span>,<span class="number">1.74</span>;<span class="number">1.38</span>,<span class="number">1.64</span>;<span class="number">1.38</span>,<span class="number">1.82</span>;<span class="number">1.38</span>,<span class="number">1.90</span>;</span><br><span class="line"><span class="number">1.40</span>,<span class="number">1.70</span>;<span class="number">1.48</span>,<span class="number">1.82</span>;<span class="number">1.54</span>,<span class="number">1.82</span>;<span class="number">1.56</span>,<span class="number">2.08</span>];</span><br><span class="line">p2=[<span class="number">1.14</span>,<span class="number">1.82</span>;<span class="number">1.18</span>,<span class="number">1.96</span>;<span class="number">1.20</span>,<span class="number">1.86</span>;<span class="number">1.26</span>,<span class="number">2.00</span></span><br><span class="line"><span class="number">1.28</span>,<span class="number">2.00</span>;<span class="number">1.30</span>,<span class="number">1.96</span>];</span><br><span class="line">p=[p1;p2]';</span><br><span class="line">pr=minmax(p);</span><br><span class="line">goal=[<span class="built_in">ones</span>(<span class="number">1</span>,<span class="number">9</span>),<span class="built_in">zeros</span>(<span class="number">1</span>,<span class="number">6</span>);<span class="built_in">zeros</span>(<span class="number">1</span>,<span class="number">9</span>),<span class="built_in">ones</span>(<span class="number">1</span>,<span class="number">6</span>)];</span><br><span class="line"><span class="built_in">plot</span>(p1(:,<span class="number">1</span>),p1(:,<span class="number">2</span>),<span class="string">'h'</span>,p2(:,<span class="number">1</span>),p2(:,<span class="number">2</span>),<span class="string">'o'</span>)</span><br><span class="line">net=newff(pr,[<span class="number">3</span>,<span class="number">2</span>],&#123;<span class="string">'logsig'</span>,<span class="string">'logsig'</span>&#125;);</span><br><span class="line">net.trainParam.show = <span class="number">10</span>;</span><br><span class="line">net.trainParam.lr = <span class="number">0.05</span>;</span><br><span class="line">net.trainParam.goal = <span class="number">1e-10</span>;</span><br><span class="line">net.trainParam.epochs = <span class="number">50000</span>;</span><br><span class="line">net = train(net,p,goal);</span><br><span class="line">x=[<span class="number">1.24</span> <span class="number">1.80</span>;<span class="number">1.28</span> <span class="number">1.84</span>;<span class="number">1.40</span> <span class="number">2.04</span>]';</span><br><span class="line">y0=sim(net,p)</span><br><span class="line">y=sim(net,x)</span><br></pre></td></tr></table></figure>
-
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> 随笔 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>荔枝派天坑(一)</title>
+      <link href="/2020/09/02/%E8%8D%94%E6%9E%9D%E6%B4%BE%E5%A4%A9%E5%9D%91-%E4%B8%80/"/>
+      <url>/2020/09/02/%E8%8D%94%E6%9E%9D%E6%B4%BE%E5%A4%A9%E5%9D%91-%E4%B8%80/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>第一次这么近距离接触linux内核，虽然基本失败了，但是也找到了一些解决方法，等有时间再重新尝试一下。争取打包出适配flash的镜像文件。</p></blockquote><a id="more"></a><h1 id="荔枝派天-填-坑-一"><a href="#荔枝派天-填-坑-一" class="headerlink" title="荔枝派天(填)坑(一)"></a>荔枝派天(填)坑(一)</h1><p>2020/9/2</p><ol><li>修改U-boot源代码适配 spi-flash xt25f128b(修改u-boot代码和内核代码，把ID加入)，并重新编译U-boot系统。(编译失败，待找解决方法)</li><li>使用buildroot编译linux的根文件系统。（成功）</li><li>编译linux的内核。(失败，可能是因为源码不完整)</li></ol><hr><p>等待后续</p>]]></content>
+      
+      
       <categories>
-        <category>数模竞赛笔记</category>
+          
+          <category> 树莓派 </category>
+          
+          <category> 荔枝派 </category>
+          
       </categories>
-      <tags>
-        <tag>matlab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树莓派的自动小风扇</title>
-    <url>/2020/08/30/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%B0%8F%E9%A3%8E%E6%89%87/</url>
-    <content><![CDATA[<blockquote>
-<p>装TTL接线的时候不小心把地线和5V输出引脚连了起来，一天的饭钱就这么没了。</p>
-</blockquote>
-<a id="more"></a>
-
-<h1 id="树莓派自动小风扇"><a href="#树莓派自动小风扇" class="headerlink" title="树莓派自动小风扇"></a>树莓派自动小风扇</h1><p>起因：淘宝店给配的风扇转速强劲，声音过大，于是就想做个可以利用cpu温度控制的小电扇。</p>
-<p>过程：</p>
-<ol>
-<li>买配件，PNP三极管一个，子母杜邦线若干，母母杜邦线若干(其实买了一大堆)。</li>
-<li>安装到电风扇调试（成功烧坏一天的饭钱）。</li>
-<li>编写shell脚本，设置后台运行（nohup $），开机启动(rc.local在新版本的linux没有，开启有些麻烦，就使用crontab的@reboot设置来开机启动了)。</li>
-<li>写博客吹水。</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">sudo gpio mode 1 output</span><br><span class="line">while [[1 == 1]]; do</span><br><span class="line">	cputemp=`sudo cat /sys/class/thermal/thermal_zone0/temp`</span><br><span class="line">	temp=$[ $cputemp/1000]</span><br><span class="line">	if[[ &amp;temp &gt; 51]]; then</span><br><span class="line">		sudo gpio write 1 0</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [[ $temp &lt;40 ]]; then</span><br><span class="line">		sudo gpio white 1 1</span><br><span class="line">	fi </span><br><span class="line"><span class="meta">	#</span><span class="bash">一个循环歇上4秒</span></span><br><span class="line">	sleep 4</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
-
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> 水果派 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>树莓派的自动小风扇</title>
+      <link href="/2020/08/30/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%B0%8F%E9%A3%8E%E6%89%87/"/>
+      <url>/2020/08/30/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%B0%8F%E9%A3%8E%E6%89%87/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>装TTL接线的时候不小心把地线和5V输出引脚连了起来，一天的饭钱就这么没了。</p></blockquote><a id="more"></a><h1 id="树莓派自动小风扇"><a href="#树莓派自动小风扇" class="headerlink" title="树莓派自动小风扇"></a>树莓派自动小风扇</h1><p>起因：淘宝店给配的风扇转速强劲，声音过大，于是就想做个可以利用cpu温度控制的小电扇。</p><p>过程：</p><ol><li>买配件，PNP三极管一个，子母杜邦线若干，母母杜邦线若干(其实买了一大堆)。</li><li>安装到电风扇调试（成功烧坏一天的饭钱）。</li><li>编写shell脚本，设置后台运行（nohup $），开机启动(rc.local在新版本的linux没有，开启有些麻烦，就使用crontab的@reboot设置来开机启动了)。</li><li>写博客吹水。</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">sudo gpio mode 1 output</span><br><span class="line">while [[1 == 1]]; do</span><br><span class="line">cputemp=`sudo cat /sys/class/thermal/thermal_zone0/temp`</span><br><span class="line">temp=$[ $cputemp/1000]</span><br><span class="line">if[[ &amp;temp &gt; 51]]; then</span><br><span class="line">sudo gpio write 1 0</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [[ $temp &lt;40 ]]; then</span><br><span class="line">sudo gpio white 1 1</span><br><span class="line">fi </span><br><span class="line"><span class="meta">#</span><span class="bash">一个循环歇上4秒</span></span><br><span class="line">sleep 4</span><br><span class="line">done</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
       <categories>
-        <category>树莓派</category>
+          
+          <category> 树莓派 </category>
+          
       </categories>
-      <tags>
-        <tag>水果派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>荔枝派天坑(一)</title>
-    <url>/2020/09/02/%E8%8D%94%E6%9E%9D%E6%B4%BE%E5%A4%A9%E5%9D%91-%E4%B8%80/</url>
-    <content><![CDATA[<blockquote>
-<p>第一次这么近距离接触linux内核，虽然基本失败了，但是也找到了一些解决方法，等有时间再重新尝试一下。争取打包出适配flash的镜像文件。</p>
-</blockquote>
-<a id="more"></a>
-
-<h1 id="荔枝派天-填-坑-一"><a href="#荔枝派天-填-坑-一" class="headerlink" title="荔枝派天(填)坑(一)"></a>荔枝派天(填)坑(一)</h1><p>2020/9/2</p>
-<ol>
-<li>修改U-boot源代码适配 spi-flash xt25f128b(修改u-boot代码和内核代码，把ID加入)，并重新编译U-boot系统。(编译失败，待找解决方法)</li>
-<li>使用buildroot编译linux的根文件系统。（成功）</li>
-<li>编译linux的内核。(失败，可能是因为源码不完整)</li>
-</ol>
-<hr>
-<p>等待后续</p>
-]]></content>
+      
+      
+        <tags>
+            
+            <tag> 水果派 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>荔枝派!树莓派!开坑记录</title>
+      <link href="/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/"/>
+      <url>/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/</url>
+      
+        <content type="html"><![CDATA[<blockquote><h6 id="好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。"><a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="headerlink" title="好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。"></a>好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。</h6></blockquote><a id="more"></a><h2 id="荔枝派nano"><a href="#荔枝派nano" class="headerlink" title="荔枝派nano"></a>荔枝派nano</h2><p>​        这算是我第一次接触的arm开发板，这块板子没有太多的资料，感觉对我这种新手极度不友好。不过通过第一次玩板子我第一了解到了flash，TTL串口，嵌入式主板引导程序Uboot，交叉编译工具链。</p><p>目前准备填的坑(咕):</p><ol><li>将Uboot重新编译来完成对flash的分区，将linux装到flash上(之前是装到sd卡上的)。</li><li>学习qt或littleGL，尝试给开发板写个简单的可交互的图形界面。</li><li>尝试自己通过源码编译一下linux内核。</li><li>尝试用这个开发板音频解码，播放音乐和视频。</li></ol><h2 id="树莓派"><a href="#树莓派" class="headerlink" title="树莓派"></a>树莓派</h2><p>​        有了荔枝派的铺垫，树莓派的操作就显得特别简单了，如手后先装了ubuntu-server，之后安装了nginx搭建起来了网站，顺便把自动填报得脚本也挂了上去。由于安装的是64位系统,WiringPi没有对应安装包，无法对引脚进行编程，于是在<a href="https://github.com/WiringPi/WiringPi">官方github</a>下载源码重新编译了一个。</p><p>目前准备填的坑：</p><ol><li>让树莓派通过wifi联网，由于用的是ubuntu的64位官方支持不是那么友好，尝试修改boot或直接连接都失败了(也可能是我wifi的问题)。</li><li>对引脚进行编程，尝试控制一下LED灯之类的小东西。</li><li>发现更多的新坑。</li></ol>]]></content>
+      
+      
       <categories>
-        <category>树莓派</category>
-        <category>荔枝派</category>
+          
+          <category> 树莓派 </category>
+          
+          <category> 荔枝派 </category>
+          
       </categories>
-      <tags>
-        <tag>水果派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>重新写博客</title>
-    <url>/2020/05/18/%E9%87%8D%E6%96%B0%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h1 id="重新起航-和-一些关于Linux系统杂谈"><a href="#重新起航-和-一些关于Linux系统杂谈" class="headerlink" title="重新起航 和 一些关于Linux系统杂谈"></a>重新起航 和 一些关于Linux系统杂谈</h1><p>​        之前的博客因为装Linux和Windows双系统把windows的一些给整坏了，数据全部都没了。</p>
-<a id="more"></a>所以以此为契机，不如重新写博客吧。之前的博客也都挺水的，没有太多的知识沉淀与总结。
-
-
-
-<p>题外话：    在Windows和Linux系统之间反复横跳的我最后理解了，系统之间并没有什么高下之分，只有自己用的舒服就好。Linux系统入坑前，总觉有种高大上的感觉。但最后觉得和Windows一样，都是只是一种生产力工具，要看自己用的舒服和运用领域了。</p>
-<p>最后几句：</p>
-<p>​        Ubuntu 20.04 LTS 默认桌面 gnome3.36 风格终于变的有现代感了，之前的gnome桌面感觉土里土气的o((&gt;ω&lt; ))o</p>
-<p>​        deepin V20 也今年终于发布了，虽然 V15 使用过程中会出现奇怪的问题，但是deepin 个人感觉美化非常好，支持一波国产操作系统。<a href="https://www.deepin.org/2020/04/15/deepin-20-beta/">deep-20-beta</a></p>
-<iframe frameborder="0" border="1" 
-        marginwidth="0" marginheight="0" 
-        width=333 height=77 
-        src="//music.163.com/outchain/player?type=2&id=1320584618&auto=1&height=66">
-</iframe>]]></content>
+      
+      
+        <tags>
+            
+            <tag> 水果派 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>重新写博客</title>
+      <link href="/2020/05/18/%E9%87%8D%E6%96%B0%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2/"/>
+      <url>/2020/05/18/%E9%87%8D%E6%96%B0%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2/</url>
+      
+        <content type="html"><![CDATA[<h1 id="重新起航-和-一些关于Linux系统杂谈"><a href="#重新起航-和-一些关于Linux系统杂谈" class="headerlink" title="重新起航 和 一些关于Linux系统杂谈"></a>重新起航 和 一些关于Linux系统杂谈</h1><p>​        之前的博客因为装Linux和Windows双系统把windows的一些给整坏了，数据全部都没了。</p><a id="more"></a>所以以此为契机，不如重新写博客吧。之前的博客也都挺水的，没有太多的知识沉淀与总结。<p>题外话：    在Windows和Linux系统之间反复横跳的我最后理解了，系统之间并没有什么高下之分，只有自己用的舒服就好。Linux系统入坑前，总觉有种高大上的感觉。但最后觉得和Windows一样，都是只是一种生产力工具，要看自己用的舒服和运用领域了。</p><p>最后几句：</p><p>​        Ubuntu 20.04 LTS 默认桌面 gnome3.36 风格终于变的有现代感了，之前的gnome桌面感觉土里土气的o((&gt;ω&lt; ))o</p><p>​        deepin V20 也今年终于发布了，虽然 V15 使用过程中会出现奇怪的问题，但是deepin 个人感觉美化非常好，支持一波国产操作系统。<a href="https://www.deepin.org/2020/04/15/deepin-20-beta/">deep-20-beta</a></p><iframe frameborder="0" border="1"         marginwidth="0" marginheight="0"         width=333 height=77         src="//music.163.com/outchain/player?type=2&id=1320584618&auto=1&height=66"></iframe>]]></content>
+      
+      
       <categories>
-        <category>随笔</category>
+          
+          <category> 随笔 </category>
+          
       </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> 随笔 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2020/05/18/hello-world/"/>
+      <url>/2020/05/18/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><a id="more"></a><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
 </search>
