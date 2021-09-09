@@ -88,7 +88,7 @@
       </tags>
   </entry>
   <entry>
-    <title>django可复用与中间件</title>
+    <title>django中间件</title>
     <url>/2021/04/05/django%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
     <content><![CDATA[]]></content>
   </entry>
@@ -154,11 +154,9 @@
       </tags>
   </entry>
   <entry>
-    <title>用channels实现websocket服务器</title>
+    <title>django实现websocket服务器(1)</title>
     <url>/2021/09/09/django%E5%AE%9E%E7%8E%B0websocket%E6%9C%8D%E5%8A%A1%E5%99%A81/</url>
-    <content><![CDATA[<hr>
-<p><strong>django</strong></p>
-<blockquote>
+    <content><![CDATA[<blockquote>
 <p>学习使用django利用channels来实现一个简易的websocket服务器(1)</p>
 <a id="more"></a>
 </blockquote>
@@ -386,51 +384,6 @@
       </categories>
       <tags>
         <tag>matlab</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>leetcode2021春季赛复盘</title>
-    <url>/2021/04/05/leetcode2021%E6%98%A5%E5%AD%A3%E8%B5%9B%E5%A4%8D%E7%9B%98/</url>
-    <content><![CDATA[
-        <h1 id="2021-leetcode春季赛复盘"   >
-          <a href="#2021-leetcode春季赛复盘" class="heading-link"><i class="fas fa-link"></i></a><a href="#2021-leetcode春季赛复盘" class="headerlink" title="2021-leetcode春季赛复盘"></a>2021-leetcode春季赛复盘</h1>
-      <blockquote>
-<p>第一次参加leetcode比赛，没打出来几道题，在这里学习和总结一下大佬们的答题代码。</p>
-</blockquote>
-
-        <h3 id="1-采购方案"   >
-          <a href="#1-采购方案" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-采购方案" class="headerlink" title="1. 采购方案"></a>1. 采购方案</h3>
-      <blockquote>
-<p>小力将 N 个零件的报价存于数组 <code>nums</code>。小力预算为 <code>target</code>，假定小力仅购买两个零件，要求购买零件的花费不超过预算，请问他有多少种采购方案。</p>
-<p>注意：答案需要以 <code>1e9 + 7 (1000000007)</code> 为底取模，如：计算初始结果为：<code>1000000008</code>，请返回 <code>1</code>。</p>
-</blockquote>
-<p>​        看到题的第一反应，这是一个类似于背包问题的题目。但是看到仅购买两个零件可以得出和背包问题没有关系，对于是否超出预算只用进行简单的判断。</p>
-<p>​        题目的主要思路就是先将数组排序，在开头和结尾设计两个标记点  a，b。如果 nums[a]+nums[b]&lt;=target,则对a进行自增。反之则b自减，在b自减前，nums[a]之前的数据都可以与nums[b]结合生成采购方案，所以b适用的方案个数就是a。不断重复上述动作直到a&gt;=b。</p>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">purchasePlans</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> target)</span> </span>&#123;</span><br><span class="line">        Arrays.sort(nums);</span><br><span class="line">        <span class="keyword">int</span> j = nums.length - <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">long</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> mod = (<span class="keyword">int</span>) (<span class="number">1e9</span> + <span class="number">7</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; j; i++) &#123;</span><br><span class="line">            <span class="keyword">while</span> (j &gt; i &amp;&amp; nums[i] + nums[j] &gt; target) &#123;</span><br><span class="line">                j--;</span><br><span class="line">            &#125;</span><br><span class="line">            res = (res + j - i) % mod;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>) res % mod;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-
-        <h3 id="2-乐团站位"   >
-          <a href="#2-乐团站位" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-乐团站位" class="headerlink" title="2. 乐团站位"></a>2. 乐团站位</h3>
-      <blockquote>
-<p>某乐团的演出场地可视作 <code>num * num</code> 的二维矩阵 <code>grid</code>（左上角坐标为 <code>[0,0]</code>)，每个位置站有一位成员。乐团共有 <code>9</code> 种乐器，乐器编号为 <code>1~9</code>，每位成员持有 <code>1</code> 个乐器。</p>
-<p>为保证声乐混合效果，成员站位规则为：自 <code>grid</code> 左上角开始顺时针螺旋形向内循环以 <code>1，2，...，9</code> 循环重复排列。例如当 num = <code>5</code> 时，站位如图所示</p>
-<p><img src="https://pic.leetcode-cn.com/1616125411-WOblWH-image.png" alt=""></p>
-</blockquote>
-<figure class="highlight java"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">orchestraLayout</span><span class="params">(<span class="keyword">int</span> num, <span class="keyword">int</span> xPos, <span class="keyword">int</span> yPos)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> n = (num + <span class="number">1</span>) / <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> x = Math.min(xPos + <span class="number">1</span>, num - xPos);</span><br><span class="line">        <span class="keyword">int</span> y = Math.min(yPos + <span class="number">1</span>, num - yPos);</span><br><span class="line">        <span class="keyword">int</span> i = Math.min(x, y);</span><br><span class="line">        <span class="keyword">long</span> start = (<span class="number">4L</span> * (i - <span class="number">1</span>) * (num - <span class="number">1</span>) % <span class="number">9</span> + <span class="number">9</span> - <span class="number">4L</span> * (i - <span class="number">1</span>) * (i - <span class="number">2</span>) % <span class="number">9</span>) % <span class="number">9</span>;</span><br><span class="line">        <span class="keyword">int</span> cur = num - <span class="number">1</span> - <span class="number">2</span> * (i - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (xPos + <span class="number">1</span> == i) &#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">int</span>) ((start + yPos - (i - <span class="number">1</span>)) % <span class="number">9</span> + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (num - yPos == i) &#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">int</span>) ((start + cur + xPos - (i - <span class="number">1</span>)) % <span class="number">9</span> + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (num - xPos == i) &#123;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">int</span>) ((start + <span class="number">2</span> * cur + (num - <span class="number">1</span> - yPos) - (i - <span class="number">1</span>)) % <span class="number">9</span> + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>) ((start + <span class="number">3</span> * cur + (num - <span class="number">1</span> - xPos) - (i - <span class="number">1</span>)) % <span class="number">9</span> + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
-
-<blockquote>
-<p>上来写了个螺旋矩阵遍历才看到数据规模是10^9。。这个数据规模O(n)时间复杂度是必定会TLE的，只能找O(1)复杂度的数学方法。<br>第一步，我们观察下这个螺旋矩阵，它是一圈圈绕进去的，数字不断的再加一（取模9），题目让我们找到某个坐标的值，我们第一反应是需要找到这个坐标所在的“层”，这个层怎么求呢？这个层的距离是该坐标离4个边界距离的最小值，也就是min(min(min(x, y), n - 1 - x), n - 1 -y);</p>
-<p>第二步我们要求出除了当前这层外面环绕的layer - 1层最后的数字，这里需要用到数学公式推导一下：<br>每一层数的个数为4(n-2k-1)（k表示层数），这个可以手写模拟下得到：<br>例如：第0层四个方向数的个数分别为n=&gt;n-1=&gt;n-1=&gt;n-2，第一层n-1=&gt;n-2=&gt;n-2=&gt;n-3<br>*第一层到第k-1层的数的个数我们通过高斯公式求出（等差数列，每层相差8k个数）：4(n - 1) + 4(n - 2(k - 1) - 1) * (k) / 2, 简化下就是(4n-4k)k 对应代码(LL)((LL)4 * n - (LL)4 * layer) * layer</p>
-<p>第三步我们找到当前坐标在本层layer层所在的偏移，统计这个偏移的数的个数，需要根据4个方向分开讨论，分别对应的上右下左四条边，注意右下左三条边在求数的个数时候要把前面方向的数个数累加起来，这个和第二步推导类似就不详细说明了</p>
-<p>注意：因为数据规模是10^9，所以涉及到乘法的操作全部需要加long long</p>
-<p>作者：EllieFeng<br>链接：<span class="exturl"><a class="exturl__link"   href="https://leetcode-cn.com/problems/SNJvJP/solution/c-shu-xue-mo-ni-zhu-yi-da-shu-chu-li-by-wyem6/"  target="_blank" rel="noopener">https://leetcode-cn.com/problems/SNJvJP/solution/c-shu-xue-mo-ni-zhu-yi-da-shu-chu-li-by-wyem6/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>来源：力扣（LeetCode）<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>比赛复盘</category>
-      </categories>
-      <tags>
-        <tag>算法</tag>
       </tags>
   </entry>
   <entry>
