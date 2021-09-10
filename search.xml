@@ -1,6 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>django实现websocket服务器(1)</title>
+    <url>/2021/09/09/django%E5%AE%9E%E7%8E%B0websocket%E6%9C%8D%E5%8A%A1%E5%99%A81/</url>
+    <content><![CDATA[<blockquote>
+<p>学习使用django利用channels来实现一个简易的websocket服务器(1)</p>
+<a id="more"></a>
+</blockquote>
+
+        <h1 id="django实现websocket服务器-1"   >
+          <a href="#django实现websocket服务器-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#django实现websocket服务器-1" class="headerlink" title="django实现websocket服务器(1)"></a>django实现websocket服务器(1)</h1>
+      <blockquote>
+<p>最近参与的外包项目中提到了创建一个客服服务的需求，如果采用前端轮询服务器，过多的访问话会服务器产生较大的开销。于是就想到了利用webscoket协议尝试进行实现。以下是学习的一些笔记。</p>
+</blockquote>
+<p>不同于普通的HTTP请求使用的WSGI，websocket要使用ASGI,使用异步调用来进行长连接。</p>
+
+        <h3 id="channels-consumer"   >
+          <a href="#channels-consumer" class="heading-link"><i class="fas fa-link"></i></a><a href="#channels-consumer" class="headerlink" title="channels.consumer"></a>channels.consumer</h3>
+      <p>channels为我们提供一个consumer的抽象，是我们更好使用ASGI程序。</p>
+<p>consumer有两种类型，AsyncConsumer和SyncConsumer。</p>
+<p>这是一个使用继承WebsocketConsumer同步消费者视图的简单实现例子，我们要关注不同阶段如connect，diconnect，receive这几个函数。</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> channels.generic.websocket <span class="keyword">import</span> WebsocketConsumer</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChatConsumer</span><span class="params">(WebsocketConsumer)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.accept()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">disconnect</span><span class="params">(self, close_code)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">receive</span><span class="params">(self, text_data)</span>:</span></span><br><span class="line">        text_data_json = json.loads(text_data)</span><br><span class="line">        message = text_data_json[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        self.send(text_data=json.dumps(&#123;</span><br><span class="line">            <span class="string">'message'</span>: message</span><br><span class="line">        &#125;))</span><br></pre></td></tr></table></div></figure>
+
+<p>对于后端来说，添加类似代码将通道名存入数据库，在websocket创建时将它的通道名self.channel_name保存，发送时调用channel_layer.send( 通道名，… )即可完成信息的发送。</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line">“Clients.objects.create(channel_name=self.channel_name)”</span><br></pre></td></tr></table></div></figure>
+
+
+        <h3 id="channel-layers"   >
+          <a href="#channel-layers" class="heading-link"><i class="fas fa-link"></i></a><a href="#channel-layers" class="headerlink" title="channel_layers"></a>channel_layers</h3>
+      <p>有时我们想要创建一个类似于群聊的东西。这时候我们就要使用通道层来实现不同通道间的通讯。即为实现一个聊天室。</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># chat/consumers.py</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> asgiref.sync <span class="keyword">import</span> async_to_sync</span><br><span class="line"><span class="keyword">from</span> channels.generic.websocket <span class="keyword">import</span> WebsocketConsumer</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChatConsumer</span><span class="params">(WebsocketConsumer)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.room_name = self.scope[<span class="string">'url_route'</span>][<span class="string">'kwargs'</span>][<span class="string">'room_name'</span>]</span><br><span class="line">        self.room_group_name = <span class="string">'chat_%s'</span> % self.room_name</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Join room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_add)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            self.channel_name</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.accept()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">disconnect</span><span class="params">(self, close_code)</span>:</span></span><br><span class="line">        <span class="comment"># Leave room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_discard)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            self.channel_name</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Receive message from WebSocket</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">receive</span><span class="params">(self, text_data)</span>:</span></span><br><span class="line">        text_data_json = json.loads(text_data)</span><br><span class="line">        message = text_data_json[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Send message to room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_send)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">'type'</span>: <span class="string">'chat_message'</span>,</span><br><span class="line">                <span class="string">'message'</span>: message</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Receive message from room group</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">chat_message</span><span class="params">(self, event)</span>:</span></span><br><span class="line">        message = event[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Send message to WebSocket</span></span><br><span class="line">        self.send(text_data=json.dumps(&#123;</span><br><span class="line">            <span class="string">'message'</span>: message</span><br><span class="line">        &#125;))</span><br></pre></td></tr></table></div></figure>
+
+<blockquote>
+<p>演示代码来自于<span class="exturl"><a class="exturl__link"   href="https://channels.readthedocs.io/en/stable/"  target="_blank" rel="noopener">https://channels.readthedocs.io/en/stable/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>django</category>
+      </categories>
+      <tags>
+        <tag>Django</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>django中间件</title>
+    <url>/2021/04/05/django%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/05/18/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <span class="exturl"><a class="exturl__link"   href="https://hexo.io/"  target="_blank" rel="noopener">Hexo</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>! This is your very first post. Check <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/"  target="_blank" rel="noopener">documentation</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> for more info. If you get any problems when using Hexo, you can find the answer in <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/troubleshooting.html"  target="_blank" rel="noopener">troubleshooting</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> or you can ask me on <span class="exturl"><a class="exturl__link"   href="https://github.com/hexojs/hexo/issues"  target="_blank" rel="noopener">GitHub</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>.</p>
+<a id="more"></a>
+
+
+        <h2 id="Quick-Start"   >
+          <a href="#Quick-Start" class="heading-link"><i class="fas fa-link"></i></a><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2>
+      
+        <h3 id="Create-a-new-post"   >
+          <a href="#Create-a-new-post" class="heading-link"><i class="fas fa-link"></i></a><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></div></figure>
+
+<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/writing.html"  target="_blank" rel="noopener">Writing</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+
+        <h3 id="Run-server"   >
+          <a href="#Run-server" class="heading-link"><i class="fas fa-link"></i></a><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></div></figure>
+
+<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/server.html"  target="_blank" rel="noopener">Server</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+
+        <h3 id="Generate-static-files"   >
+          <a href="#Generate-static-files" class="heading-link"><i class="fas fa-link"></i></a><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></div></figure>
+
+<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/generating.html"  target="_blank" rel="noopener">Generating</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+
+        <h3 id="Deploy-to-remote-sites"   >
+          <a href="#Deploy-to-remote-sites" class="heading-link"><i class="fas fa-link"></i></a><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3>
+      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></div></figure>
+
+<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/one-command-deployment.html"  target="_blank" rel="noopener">Deployment</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+]]></content>
+  </entry>
+  <entry>
     <title>django中多对多的实现</title>
     <url>/2021/01/25/django%E4%B8%AD%E5%A4%9A%E5%AF%B9%E5%A4%9A%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[
@@ -88,9 +171,72 @@
       </tags>
   </entry>
   <entry>
-    <title>django中间件</title>
-    <url>/2021/04/05/django%E4%B8%AD%E9%97%B4%E4%BB%B6/</url>
-    <content><![CDATA[]]></content>
+    <title>django实现websocket服务器2</title>
+    <url>/2021/09/10/django%E5%AE%9E%E7%8E%B0websocket%E6%9C%8D%E5%8A%A1%E5%99%A82/</url>
+    <content><![CDATA[<blockquote>
+<p>学习使用django利用channels来实现一个简易的websocket服务器(2)</p>
+<a id="more"></a>
+</blockquote>
+
+        <h1 id="django实现websocket服务器2"   >
+          <a href="#django实现websocket服务器2" class="heading-link"><i class="fas fa-link"></i></a><a href="#django实现websocket服务器2" class="headerlink" title="django实现websocket服务器2"></a>django实现websocket服务器2</h1>
+      
+        <h3 id="routing"   >
+          <a href="#routing" class="heading-link"><i class="fas fa-link"></i></a><a href="#routing" class="headerlink" title="routing"></a>routing</h3>
+      <p>channels的路由处理不在常规的django应用的views.py和urls.py中，而是一般是通过consumers.py和routings.py来进行路由处理。同时它的路由也是支持嵌套格式的，同时我们一般在根目录下asgi.py添加相应的相应的路由。</p>
+
+        <h5 id="asgi-py"   >
+          <a href="#asgi-py" class="heading-link"><i class="fas fa-link"></i></a><a href="#asgi-py" class="headerlink" title="asgi.py"></a>asgi.py</h5>
+      <p>项目配置目录下</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># mysite/asgi.py</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> channels.auth <span class="keyword">import</span> AuthMiddlewareStack</span><br><span class="line"><span class="keyword">from</span> channels.routing <span class="keyword">import</span> ProtocolTypeRouter, URLRouter</span><br><span class="line"><span class="keyword">from</span> django.core.asgi <span class="keyword">import</span> get_asgi_application</span><br><span class="line"><span class="keyword">import</span> chat.routings</span><br><span class="line"></span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"chatserver.settings"</span>)</span><br><span class="line"></span><br><span class="line">application = ProtocolTypeRouter(&#123;</span><br><span class="line">  <span class="string">"http"</span>: get_asgi_application(),</span><br><span class="line">  <span class="string">"websocket"</span>: AuthMiddlewareStack(</span><br><span class="line">        URLRouter(</span><br><span class="line">            <span class="comment">#我们在这里添加项目的路由</span></span><br><span class="line">            chat.routings.websocket_urlpatterns</span><br><span class="line">        )</span><br><span class="line">    ),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></div></figure>
+
+
+        <h5 id="routings-py"   >
+          <a href="#routings-py" class="heading-link"><i class="fas fa-link"></i></a><a href="#routings-py" class="headerlink" title="routings.py"></a>routings.py</h5>
+      <p>对应应用目录下</p>
+<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># chat/routing.py</span></span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> re_path</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> consumers</span><br><span class="line"></span><br><span class="line">websocket_urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'ws/chat/(?P&lt;room_name&gt;\w+)/$'</span>,consumers.ChatConsumer.as_asgi()),</span><br><span class="line">]</span><br></pre></td></tr></table></div></figure>
+
+<p>总体路由操作与普通的urls.py操作也是类似的。</p>
+<blockquote>
+<p>演示代码来自于<span class="exturl"><a class="exturl__link"   href="https://channels.readthedocs.io/en/stable/"  target="_blank" rel="noopener">https://channels.readthedocs.io/en/stable/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>django</category>
+      </categories>
+      <tags>
+        <tag>Django</tag>
+        <tag>学习笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>树莓派的自动小风扇</title>
+    <url>/2020/08/30/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%B0%8F%E9%A3%8E%E6%89%87/</url>
+    <content><![CDATA[<blockquote>
+<p>装TTL接线的时候不小心把地线和5V输出引脚连了起来，一天的饭钱就这么没了。</p>
+</blockquote>
+<a id="more"></a>
+
+
+        <h1 id="树莓派自动小风扇"   >
+          <a href="#树莓派自动小风扇" class="heading-link"><i class="fas fa-link"></i></a><a href="#树莓派自动小风扇" class="headerlink" title="树莓派自动小风扇"></a>树莓派自动小风扇</h1>
+      <p>起因：淘宝店给配的风扇转速强劲，声音过大，于是就想做个可以利用cpu温度控制的小电扇。</p>
+<p>过程：</p>
+<ol>
+<li>买配件，PNP三极管一个，子母杜邦线若干，母母杜邦线若干(其实买了一大堆)。</li>
+<li>安装到电风扇调试（成功烧坏一天的饭钱）。</li>
+<li>编写shell脚本，设置后台运行（nohup $），开机启动(rc.local在新版本的linux没有，开启有些麻烦，就使用crontab的@reboot设置来开机启动了)。</li>
+<li>写博客吹水。</li>
+</ol>
+<figure class="highlight shell"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">sudo gpio mode 1 output</span><br><span class="line">while [[1 == 1]]; do</span><br><span class="line">	cputemp=`sudo cat /sys/class/thermal/thermal_zone0/temp`</span><br><span class="line">	temp=$[ $cputemp/1000]</span><br><span class="line">	if[[ &amp;temp &gt; 51]]; then</span><br><span class="line">		sudo gpio write 1 0</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [[ $temp &lt;40 ]]; then</span><br><span class="line">		sudo gpio white 1 1</span><br><span class="line">	fi </span><br><span class="line"><span class="meta">	#</span><span class="bash">一个循环歇上4秒</span></span><br><span class="line">	sleep 4</span><br><span class="line">done</span><br></pre></td></tr></table></div></figure>
+
+]]></content>
+      <categories>
+        <category>树莓派</category>
+      </categories>
+      <tags>
+        <tag>水果派</tag>
+      </tags>
   </entry>
   <entry>
     <title>我的2020与2021</title>
@@ -154,108 +300,24 @@
       </tags>
   </entry>
   <entry>
-    <title>django实现websocket服务器(1)</title>
-    <url>/2021/09/09/django%E5%AE%9E%E7%8E%B0websocket%E6%9C%8D%E5%8A%A1%E5%99%A81/</url>
+    <title>荔枝派天坑(一)</title>
+    <url>/2020/09/02/%E8%8D%94%E6%9E%9D%E6%B4%BE%E5%A4%A9%E5%9D%91-%E4%B8%80/</url>
     <content><![CDATA[<blockquote>
-<p>学习使用django利用channels来实现一个简易的websocket服务器(1)</p>
-<a id="more"></a>
-</blockquote>
-
-        <h1 id="django实现websocket服务器-1"   >
-          <a href="#django实现websocket服务器-1" class="heading-link"><i class="fas fa-link"></i></a><a href="#django实现websocket服务器-1" class="headerlink" title="django实现websocket服务器(1)"></a>django实现websocket服务器(1)</h1>
-      <blockquote>
-<p>最近参与的外包项目中提到了创建一个客服服务的需求，如果采用前端轮询服务器，过多的访问话会服务器产生较大的开销。于是就想到了利用webscoket协议尝试进行实现。以下是学习的一些笔记。</p>
-</blockquote>
-<p>不同于普通的HTTP请求使用的WSGI，websocket要使用ASGI,使用异步调用来进行长连接。</p>
-
-        <h3 id="channels-consumer"   >
-          <a href="#channels-consumer" class="heading-link"><i class="fas fa-link"></i></a><a href="#channels-consumer" class="headerlink" title="channels.consumer"></a>channels.consumer</h3>
-      <p>channels为我们提供一个consumer的抽象，是我们更好使用ASGI程序。</p>
-<p>consumer有两种类型，AsyncConsumer和SyncConsumer。</p>
-<p>这是一个使用继承WebsocketConsumer同步消费者视图的简单实现例子，我们要关注不同阶段如connect，diconnect，receive这几个函数。</p>
-<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> channels.generic.websocket <span class="keyword">import</span> WebsocketConsumer</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChatConsumer</span><span class="params">(WebsocketConsumer)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.accept()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">disconnect</span><span class="params">(self, close_code)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">receive</span><span class="params">(self, text_data)</span>:</span></span><br><span class="line">        text_data_json = json.loads(text_data)</span><br><span class="line">        message = text_data_json[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        self.send(text_data=json.dumps(&#123;</span><br><span class="line">            <span class="string">'message'</span>: message</span><br><span class="line">        &#125;))</span><br></pre></td></tr></table></div></figure>
-
-<p>对于后端来说，添加类似代码将通道名存入数据库，在websocket创建时将它的通道名self.channel_name保存，发送时调用channel_layer.send( 通道名，… )即可完成信息的发送。</p>
-<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line">“Clients.objects.create(channel_name=self.channel_name)”</span><br></pre></td></tr></table></div></figure>
-
-
-        <h3 id="channel-layers"   >
-          <a href="#channel-layers" class="heading-link"><i class="fas fa-link"></i></a><a href="#channel-layers" class="headerlink" title="channel_layers"></a>channel_layers</h3>
-      <p>有时我们想要创建一个类似于群聊的东西。这时候我们就要使用通道层来实现不同通道间的通讯。即为实现一个聊天室。</p>
-<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># chat/consumers.py</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">from</span> asgiref.sync <span class="keyword">import</span> async_to_sync</span><br><span class="line"><span class="keyword">from</span> channels.generic.websocket <span class="keyword">import</span> WebsocketConsumer</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ChatConsumer</span><span class="params">(WebsocketConsumer)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">connect</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.room_name = self.scope[<span class="string">'url_route'</span>][<span class="string">'kwargs'</span>][<span class="string">'room_name'</span>]</span><br><span class="line">        self.room_group_name = <span class="string">'chat_%s'</span> % self.room_name</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Join room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_add)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            self.channel_name</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        self.accept()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">disconnect</span><span class="params">(self, close_code)</span>:</span></span><br><span class="line">        <span class="comment"># Leave room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_discard)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            self.channel_name</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Receive message from WebSocket</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">receive</span><span class="params">(self, text_data)</span>:</span></span><br><span class="line">        text_data_json = json.loads(text_data)</span><br><span class="line">        message = text_data_json[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Send message to room group</span></span><br><span class="line">        async_to_sync(self.channel_layer.group_send)(</span><br><span class="line">            self.room_group_name,</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">'type'</span>: <span class="string">'chat_message'</span>,</span><br><span class="line">                <span class="string">'message'</span>: message</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Receive message from room group</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">chat_message</span><span class="params">(self, event)</span>:</span></span><br><span class="line">        message = event[<span class="string">'message'</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Send message to WebSocket</span></span><br><span class="line">        self.send(text_data=json.dumps(&#123;</span><br><span class="line">            <span class="string">'message'</span>: message</span><br><span class="line">        &#125;))</span><br></pre></td></tr></table></div></figure>
-
-<blockquote>
-<p>演示代码来自于<span class="exturl"><a class="exturl__link"   href="https://channels.readthedocs.io/en/stable/"  target="_blank" rel="noopener">https://channels.readthedocs.io/en/stable/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>django</category>
-      </categories>
-      <tags>
-        <tag>Django</tag>
-        <tag>学习笔记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>树莓派的自动小风扇</title>
-    <url>/2020/08/30/%E6%A0%91%E8%8E%93%E6%B4%BE%E7%9A%84%E8%87%AA%E5%8A%A8%E5%B0%8F%E9%A3%8E%E6%89%87/</url>
-    <content><![CDATA[<blockquote>
-<p>装TTL接线的时候不小心把地线和5V输出引脚连了起来，一天的饭钱就这么没了。</p>
+<p>第一次这么近距离接触linux内核，虽然基本失败了，但是也找到了一些解决方法，等有时间再重新尝试一下。争取打包出适配flash的镜像文件。</p>
 </blockquote>
 <a id="more"></a>
 
 
-        <h1 id="树莓派自动小风扇"   >
-          <a href="#树莓派自动小风扇" class="heading-link"><i class="fas fa-link"></i></a><a href="#树莓派自动小风扇" class="headerlink" title="树莓派自动小风扇"></a>树莓派自动小风扇</h1>
-      <p>起因：淘宝店给配的风扇转速强劲，声音过大，于是就想做个可以利用cpu温度控制的小电扇。</p>
-<p>过程：</p>
+        <h1 id="荔枝派天-填-坑-一"   >
+          <a href="#荔枝派天-填-坑-一" class="heading-link"><i class="fas fa-link"></i></a><a href="#荔枝派天-填-坑-一" class="headerlink" title="荔枝派天(填)坑(一)"></a>荔枝派天(填)坑(一)</h1>
+      <p>2020/9/2</p>
 <ol>
-<li>买配件，PNP三极管一个，子母杜邦线若干，母母杜邦线若干(其实买了一大堆)。</li>
-<li>安装到电风扇调试（成功烧坏一天的饭钱）。</li>
-<li>编写shell脚本，设置后台运行（nohup $），开机启动(rc.local在新版本的linux没有，开启有些麻烦，就使用crontab的@reboot设置来开机启动了)。</li>
-<li>写博客吹水。</li>
+<li>修改U-boot源代码适配 spi-flash xt25f128b(修改u-boot代码和内核代码，把ID加入)，并重新编译U-boot系统。(编译失败，待找解决方法)</li>
+<li>使用buildroot编译linux的根文件系统。（成功）</li>
+<li>编译linux的内核。(失败，可能是因为源码不完整)</li>
 </ol>
-<figure class="highlight shell"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line">sudo gpio mode 1 output</span><br><span class="line">while [[1 == 1]]; do</span><br><span class="line">	cputemp=`sudo cat /sys/class/thermal/thermal_zone0/temp`</span><br><span class="line">	temp=$[ $cputemp/1000]</span><br><span class="line">	if[[ &amp;temp &gt; 51]]; then</span><br><span class="line">		sudo gpio write 1 0</span><br><span class="line">	fi</span><br><span class="line">	</span><br><span class="line">	if [[ $temp &lt;40 ]]; then</span><br><span class="line">		sudo gpio white 1 1</span><br><span class="line">	fi </span><br><span class="line"><span class="meta">	#</span><span class="bash">一个循环歇上4秒</span></span><br><span class="line">	sleep 4</span><br><span class="line">done</span><br></pre></td></tr></table></div></figure>
-
-]]></content>
-      <categories>
-        <category>树莓派</category>
-      </categories>
-      <tags>
-        <tag>水果派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>荔枝派!树莓派!开坑记录</title>
-    <url>/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/</url>
-    <content><![CDATA[<blockquote>
-
-        <h6 id="好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。"   >
-          <a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="heading-link"><i class="fas fa-link"></i></a><a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="headerlink" title="好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。"></a>好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。</h6>
-      </blockquote>
-<a id="more"></a>
-
-
-        <h2 id="荔枝派nano"   >
-          <a href="#荔枝派nano" class="heading-link"><i class="fas fa-link"></i></a><a href="#荔枝派nano" class="headerlink" title="荔枝派nano"></a>荔枝派nano</h2>
-      <p>​        这算是我第一次接触的arm开发板，这块板子没有太多的资料，感觉对我这种新手极度不友好。不过通过第一次玩板子我第一了解到了flash，TTL串口，嵌入式主板引导程序Uboot，交叉编译工具链。</p>
-<p>目前准备填的坑(咕):</p>
-<ol>
-<li>将Uboot重新编译来完成对flash的分区，将linux装到flash上(之前是装到sd卡上的)。</li>
-<li>学习qt或littleGL，尝试给开发板写个简单的可交互的图形界面。</li>
-<li>尝试自己通过源码编译一下linux内核。</li>
-<li>尝试用这个开发板音频解码，播放音乐和视频。</li>
-</ol>
-
-        <h2 id="树莓派"   >
-          <a href="#树莓派" class="heading-link"><i class="fas fa-link"></i></a><a href="#树莓派" class="headerlink" title="树莓派"></a>树莓派</h2>
-      <p>​        有了荔枝派的铺垫，树莓派的操作就显得特别简单了，如手后先装了ubuntu-server，之后安装了nginx搭建起来了网站，顺便把自动填报得脚本也挂了上去。由于安装的是64位系统,WiringPi没有对应安装包，无法对引脚进行编程，于是在<span class="exturl"><a class="exturl__link"   href="https://github.com/WiringPi/WiringPi"  target="_blank" rel="noopener">官方github</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>下载源码重新编译了一个。</p>
-<p>目前准备填的坑：</p>
-<ol>
-<li>让树莓派通过wifi联网，由于用的是ubuntu的64位官方支持不是那么友好，尝试修改boot或直接连接都失败了(也可能是我wifi的问题)。</li>
-<li>对引脚进行编程，尝试控制一下LED灯之类的小东西。</li>
-<li>发现更多的新坑。</li>
-</ol>
+<hr>
+<p>等待后续</p>
 ]]></content>
       <categories>
         <category>树莓派</category>
@@ -264,68 +326,6 @@
       <tags>
         <tag>水果派</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>重新写博客</title>
-    <url>/2020/05/18/%E9%87%8D%E6%96%B0%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[
-        <h1 id="重新起航-和-一些关于Linux系统杂谈"   >
-          <a href="#重新起航-和-一些关于Linux系统杂谈" class="heading-link"><i class="fas fa-link"></i></a><a href="#重新起航-和-一些关于Linux系统杂谈" class="headerlink" title="重新起航 和 一些关于Linux系统杂谈"></a>重新起航 和 一些关于Linux系统杂谈</h1>
-      <p>​        之前的博客因为装Linux和Windows双系统把windows的一些给整坏了，数据全部都没了。</p>
-<a id="more"></a>所以以此为契机，不如重新写博客吧。之前的博客也都挺水的，没有太多的知识沉淀与总结。
-
-
-
-<p>题外话：    在Windows和Linux系统之间反复横跳的我最后理解了，系统之间并没有什么高下之分，只有自己用的舒服就好。Linux系统入坑前，总觉有种高大上的感觉。但最后觉得和Windows一样，都是只是一种生产力工具，要看自己用的舒服和运用领域了。</p>
-<p>最后几句：</p>
-<p>​        Ubuntu 20.04 LTS 默认桌面 gnome3.36 风格终于变的有现代感了，之前的gnome桌面感觉土里土气的o((&gt;ω&lt; ))o</p>
-<p>​        deepin V20 也今年终于发布了，虽然 V15 使用过程中会出现奇怪的问题，但是deepin 个人感觉美化非常好，支持一波国产操作系统。<span class="exturl"><a class="exturl__link"   href="https://www.deepin.org/2020/04/15/deepin-20-beta/"  target="_blank" rel="noopener">deep-20-beta</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-<iframe frameborder="0" border="1" 
-        marginwidth="0" marginheight="0" 
-        width=333 height=77 
-        src="//music.163.com/outchain/player?type=2&id=1320584618&auto=1&height=66">
-</iframe>]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/05/18/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <span class="exturl"><a class="exturl__link"   href="https://hexo.io/"  target="_blank" rel="noopener">Hexo</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>! This is your very first post. Check <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/"  target="_blank" rel="noopener">documentation</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> for more info. If you get any problems when using Hexo, you can find the answer in <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/troubleshooting.html"  target="_blank" rel="noopener">troubleshooting</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span> or you can ask me on <span class="exturl"><a class="exturl__link"   href="https://github.com/hexojs/hexo/issues"  target="_blank" rel="noopener">GitHub</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>.</p>
-<a id="more"></a>
-
-
-        <h2 id="Quick-Start"   >
-          <a href="#Quick-Start" class="heading-link"><i class="fas fa-link"></i></a><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2>
-      
-        <h3 id="Create-a-new-post"   >
-          <a href="#Create-a-new-post" class="heading-link"><i class="fas fa-link"></i></a><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3>
-      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></div></figure>
-
-<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/writing.html"  target="_blank" rel="noopener">Writing</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-
-        <h3 id="Run-server"   >
-          <a href="#Run-server" class="heading-link"><i class="fas fa-link"></i></a><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3>
-      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></div></figure>
-
-<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/server.html"  target="_blank" rel="noopener">Server</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-
-        <h3 id="Generate-static-files"   >
-          <a href="#Generate-static-files" class="heading-link"><i class="fas fa-link"></i></a><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3>
-      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></div></figure>
-
-<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/generating.html"  target="_blank" rel="noopener">Generating</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-
-        <h3 id="Deploy-to-remote-sites"   >
-          <a href="#Deploy-to-remote-sites" class="heading-link"><i class="fas fa-link"></i></a><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3>
-      <figure class="highlight bash"><div class="table-container"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></div></figure>
-
-<p>More info: <span class="exturl"><a class="exturl__link"   href="https://hexo.io/docs/one-command-deployment.html"  target="_blank" rel="noopener">Deployment</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-]]></content>
   </entry>
   <entry>
     <title>用matlab训练一个BP神经网络</title>
@@ -387,24 +387,63 @@
       </tags>
   </entry>
   <entry>
-    <title>荔枝派天坑(一)</title>
-    <url>/2020/09/02/%E8%8D%94%E6%9E%9D%E6%B4%BE%E5%A4%A9%E5%9D%91-%E4%B8%80/</url>
+    <title>重新写博客</title>
+    <url>/2020/05/18/%E9%87%8D%E6%96%B0%E6%9B%B4%E6%96%B0%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[
+        <h1 id="重新起航-和-一些关于Linux系统杂谈"   >
+          <a href="#重新起航-和-一些关于Linux系统杂谈" class="heading-link"><i class="fas fa-link"></i></a><a href="#重新起航-和-一些关于Linux系统杂谈" class="headerlink" title="重新起航 和 一些关于Linux系统杂谈"></a>重新起航 和 一些关于Linux系统杂谈</h1>
+      <p>​        之前的博客因为装Linux和Windows双系统把windows的一些给整坏了，数据全部都没了。</p>
+<a id="more"></a>所以以此为契机，不如重新写博客吧。之前的博客也都挺水的，没有太多的知识沉淀与总结。
+
+
+
+<p>题外话：    在Windows和Linux系统之间反复横跳的我最后理解了，系统之间并没有什么高下之分，只有自己用的舒服就好。Linux系统入坑前，总觉有种高大上的感觉。但最后觉得和Windows一样，都是只是一种生产力工具，要看自己用的舒服和运用领域了。</p>
+<p>最后几句：</p>
+<p>​        Ubuntu 20.04 LTS 默认桌面 gnome3.36 风格终于变的有现代感了，之前的gnome桌面感觉土里土气的o((&gt;ω&lt; ))o</p>
+<p>​        deepin V20 也今年终于发布了，虽然 V15 使用过程中会出现奇怪的问题，但是deepin 个人感觉美化非常好，支持一波国产操作系统。<span class="exturl"><a class="exturl__link"   href="https://www.deepin.org/2020/04/15/deepin-20-beta/"  target="_blank" rel="noopener">deep-20-beta</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<iframe frameborder="0" border="1" 
+        marginwidth="0" marginheight="0" 
+        width=333 height=77 
+        src="//music.163.com/outchain/player?type=2&id=1320584618&auto=1&height=66">
+</iframe>]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>荔枝派!树莓派!开坑记录</title>
+    <url>/2020/08/28/%E8%8D%94%E6%9E%9D%E6%B4%BE-%E6%A0%91%E8%8E%93%E6%B4%BE/</url>
     <content><![CDATA[<blockquote>
-<p>第一次这么近距离接触linux内核，虽然基本失败了，但是也找到了一些解决方法，等有时间再重新尝试一下。争取打包出适配flash的镜像文件。</p>
-</blockquote>
+
+        <h6 id="好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。"   >
+          <a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="heading-link"><i class="fas fa-link"></i></a><a href="#好久没有写博客了，之前入手了一枚-荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个-树莓派4B-，现在就先写个概要，记录一下之前填的坑和还没填的坑。" class="headerlink" title="好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。"></a>好久没有写博客了，之前入手了一枚 荔枝派nano，感觉自己目前技术驾驭不了，于是现在就入手了个 树莓派4B ，现在就先写个概要，记录一下之前填的坑和还没填的坑。</h6>
+      </blockquote>
 <a id="more"></a>
 
 
-        <h1 id="荔枝派天-填-坑-一"   >
-          <a href="#荔枝派天-填-坑-一" class="heading-link"><i class="fas fa-link"></i></a><a href="#荔枝派天-填-坑-一" class="headerlink" title="荔枝派天(填)坑(一)"></a>荔枝派天(填)坑(一)</h1>
-      <p>2020/9/2</p>
+        <h2 id="荔枝派nano"   >
+          <a href="#荔枝派nano" class="heading-link"><i class="fas fa-link"></i></a><a href="#荔枝派nano" class="headerlink" title="荔枝派nano"></a>荔枝派nano</h2>
+      <p>​        这算是我第一次接触的arm开发板，这块板子没有太多的资料，感觉对我这种新手极度不友好。不过通过第一次玩板子我第一了解到了flash，TTL串口，嵌入式主板引导程序Uboot，交叉编译工具链。</p>
+<p>目前准备填的坑(咕):</p>
 <ol>
-<li>修改U-boot源代码适配 spi-flash xt25f128b(修改u-boot代码和内核代码，把ID加入)，并重新编译U-boot系统。(编译失败，待找解决方法)</li>
-<li>使用buildroot编译linux的根文件系统。（成功）</li>
-<li>编译linux的内核。(失败，可能是因为源码不完整)</li>
+<li>将Uboot重新编译来完成对flash的分区，将linux装到flash上(之前是装到sd卡上的)。</li>
+<li>学习qt或littleGL，尝试给开发板写个简单的可交互的图形界面。</li>
+<li>尝试自己通过源码编译一下linux内核。</li>
+<li>尝试用这个开发板音频解码，播放音乐和视频。</li>
 </ol>
-<hr>
-<p>等待后续</p>
+
+        <h2 id="树莓派"   >
+          <a href="#树莓派" class="heading-link"><i class="fas fa-link"></i></a><a href="#树莓派" class="headerlink" title="树莓派"></a>树莓派</h2>
+      <p>​        有了荔枝派的铺垫，树莓派的操作就显得特别简单了，如手后先装了ubuntu-server，之后安装了nginx搭建起来了网站，顺便把自动填报得脚本也挂了上去。由于安装的是64位系统,WiringPi没有对应安装包，无法对引脚进行编程，于是在<span class="exturl"><a class="exturl__link"   href="https://github.com/WiringPi/WiringPi"  target="_blank" rel="noopener">官方github</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>下载源码重新编译了一个。</p>
+<p>目前准备填的坑：</p>
+<ol>
+<li>让树莓派通过wifi联网，由于用的是ubuntu的64位官方支持不是那么友好，尝试修改boot或直接连接都失败了(也可能是我wifi的问题)。</li>
+<li>对引脚进行编程，尝试控制一下LED灯之类的小东西。</li>
+<li>发现更多的新坑。</li>
+</ol>
 ]]></content>
       <categories>
         <category>树莓派</category>
@@ -412,45 +451,6 @@
       </categories>
       <tags>
         <tag>水果派</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>django实现websocket服务器2</title>
-    <url>/2021/09/10/django%E5%AE%9E%E7%8E%B0websocket%E6%9C%8D%E5%8A%A1%E5%99%A82/</url>
-    <content><![CDATA[<blockquote>
-<p>学习使用django利用channels来实现一个简易的websocket服务器(2)</p>
-<a id="more"></a>
-</blockquote>
-
-        <h1 id="django实现websocket服务器2"   >
-          <a href="#django实现websocket服务器2" class="heading-link"><i class="fas fa-link"></i></a><a href="#django实现websocket服务器2" class="headerlink" title="django实现websocket服务器2"></a>django实现websocket服务器2</h1>
-      
-        <h3 id="routing"   >
-          <a href="#routing" class="heading-link"><i class="fas fa-link"></i></a><a href="#routing" class="headerlink" title="routing"></a>routing</h3>
-      <p>channels的路由处理不在常规的django应用的views.py和urls.py中，而是一般是通过consumers.py和routings.py来进行路由处理。同时它的路由也是支持嵌套格式的，同时我们一般在根目录下asgi.py添加相应的相应的路由。</p>
-
-        <h5 id="asgi-py"   >
-          <a href="#asgi-py" class="heading-link"><i class="fas fa-link"></i></a><a href="#asgi-py" class="headerlink" title="asgi.py"></a>asgi.py</h5>
-      <p>项目配置目录下</p>
-<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># mysite/asgi.py</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> channels.auth <span class="keyword">import</span> AuthMiddlewareStack</span><br><span class="line"><span class="keyword">from</span> channels.routing <span class="keyword">import</span> ProtocolTypeRouter, URLRouter</span><br><span class="line"><span class="keyword">from</span> django.core.asgi <span class="keyword">import</span> get_asgi_application</span><br><span class="line"><span class="keyword">import</span> chat.routings</span><br><span class="line"></span><br><span class="line">os.environ.setdefault(<span class="string">"DJANGO_SETTINGS_MODULE"</span>, <span class="string">"chatserver.settings"</span>)</span><br><span class="line"></span><br><span class="line">application = ProtocolTypeRouter(&#123;</span><br><span class="line">  <span class="string">"http"</span>: get_asgi_application(),</span><br><span class="line">  <span class="string">"websocket"</span>: AuthMiddlewareStack(</span><br><span class="line">        URLRouter(</span><br><span class="line">            <span class="comment">#我们在这里添加项目的路由</span></span><br><span class="line">            chat.routings.websocket_urlpatterns</span><br><span class="line">        )</span><br><span class="line">    ),</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></div></figure>
-
-
-        <h5 id="routings-py"   >
-          <a href="#routings-py" class="heading-link"><i class="fas fa-link"></i></a><a href="#routings-py" class="headerlink" title="routings.py"></a>routings.py</h5>
-      <p>对应应用目录下</p>
-<figure class="highlight python"><div class="table-container"><table><tr><td class="code"><pre><span class="line"><span class="comment"># chat/routing.py</span></span><br><span class="line"><span class="keyword">from</span> django.urls <span class="keyword">import</span> re_path</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> consumers</span><br><span class="line"></span><br><span class="line">websocket_urlpatterns = [</span><br><span class="line">    re_path(<span class="string">r'ws/chat/(?P&lt;room_name&gt;\w+)/$'</span>,consumers.ChatConsumer.as_asgi()),</span><br><span class="line">]</span><br></pre></td></tr></table></div></figure>
-
-<p>总体路由操作与普通的urls.py操作也是类似的。</p>
-<blockquote>
-<p>演示代码来自于<span class="exturl"><a class="exturl__link"   href="https://channels.readthedocs.io/en/stable/"  target="_blank" rel="noopener">https://channels.readthedocs.io/en/stable/</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>django</category>
-      </categories>
-      <tags>
-        <tag>Django</tag>
-        <tag>学习笔记</tag>
       </tags>
   </entry>
 </search>
