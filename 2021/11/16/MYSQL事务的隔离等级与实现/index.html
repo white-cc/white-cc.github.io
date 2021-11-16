@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/favicon-16x16.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/favicon-32x32.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="一.事务的ACID特性        atomic原子性：操作要么成功要么失败。  consistency一致性：事务的开始与结束后事务的完整性没有遭到破坏。  isolation隔离性：事务可能并发执行，但事务之间不会相互感知。  durability持久性：事务完成后对于数据库的改变是永久的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MYSQL事务的隔离等级与实现">
+<meta property="og:url" content="http://yoursite.com/2021/11/16/MYSQL%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%AD%89%E7%BA%A7%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="white-cc">
+<meta property="og:description" content="一.事务的ACID特性        atomic原子性：操作要么成功要么失败。  consistency一致性：事务的开始与结束后事务的完整性没有遭到破坏。  isolation隔离性：事务可能并发执行，但事务之间不会相互感知。  durability持久性：事务完成后对于数据库的改变是永久的。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-11-16T15:21:10.000Z">
+<meta property="article:modified_time" content="2021-11-16T15:24:46.603Z">
+<meta property="article:author" content="white-cc">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary"><title>MYSQL事务的隔离等级与实现 | white-cc</title><link ref="canonical" href="http://yoursite.com/2021/11/16/MYSQL%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%AD%89%E7%BA%A7%E4%B8%8E%E5%AE%9E%E7%8E%B0/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"Copy","copySuccess":"Copy Success","copyError":"Copy Error"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">Home</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">Archives</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">Categories</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">Tags</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/about/"><span class="header-nav-menu-item__text">About</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">white-cc</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">MYSQL事务的隔离等级与实现</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">Created</span><span class="post-meta-item__value">2021-11-16</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">Updated</span><span class="post-meta-item__value">2021-11-16</span></span></div></header><div class="post-body">
+        <h2 id="一-事务的ACID特性"   >
+          <a href="#一-事务的ACID特性" class="heading-link"><i class="fas fa-link"></i></a><a href="#一-事务的ACID特性" class="headerlink" title="一.事务的ACID特性"></a>一.事务的ACID特性</h2>
+      <ol>
+<li><p>atomic原子性：操作要么成功要么失败。</p>
+</li>
+<li><p>consistency一致性：事务的开始与结束后事务的完整性没有遭到破坏。</p>
+</li>
+<li><p>isolation隔离性：事务可能并发执行，但事务之间不会相互感知。</p>
+</li>
+<li><p>durability持久性：事务完成后对于数据库的改变是永久的。</p>
+<a id="more"></a>
+
+</li>
+</ol>
+
+        <h2 id="二-事务的隔离等级与其解决的问题"   >
+          <a href="#二-事务的隔离等级与其解决的问题" class="heading-link"><i class="fas fa-link"></i></a><a href="#二-事务的隔离等级与其解决的问题" class="headerlink" title="二.事务的隔离等级与其解决的问题"></a>二.事务的隔离等级与其解决的问题</h2>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th></th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交 RU</td>
+<td>YES</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>读已提交 RC</td>
+<td>NO</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>可重复读 RR</td>
+<td>NO</td>
+<td>NO</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>可串行化 Serializable</td>
+<td>NO</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+</tbody></table></div>
+<ol>
+<li>脏读：在读未提交的过程中，一个事务A读到了事务B的改变的值，但事务B最后回滚了，那么事务A就读到的是一个不能存在的值。</li>
+<li>不可重复读：事务A在第一次读取值a时，事务B并没有改变事务a的取值。在第一次读取之后，事务B完成了commit，那么事务A再次读取A值时。会发现两次读取的结果不相同。</li>
+<li>幻读： 事务A在读取一系列表记录时，记录s还没有插入到表记录中。此时事务A的读取中没有记录s，但是再次读取时会发现出现了记录s，就像出现了幻觉。所以被称为幻读。</li>
+</ol>
+
+        <h3 id="通过加锁的方式来实现不同的事务隔离级别"   >
+          <a href="#通过加锁的方式来实现不同的事务隔离级别" class="heading-link"><i class="fas fa-link"></i></a><a href="#通过加锁的方式来实现不同的事务隔离级别" class="headerlink" title="通过加锁的方式来实现不同的事务隔离级别"></a>通过加锁的方式来实现不同的事务隔离级别</h3>
+      <ol>
+<li>
+        <h5 id="读未提交"   >
+          <a href="#读未提交" class="heading-link"><i class="fas fa-link"></i></a><a href="#读未提交" class="headerlink" title="读未提交"></a>读未提交</h5>
+      </li>
+</ol>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th></th>
+<th>读</th>
+<th>写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>写</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+</tbody></table></div>
+<p>​       在RU中可能会读到其他事务未提交的数据，如果事务回滚可能会产生<strong>脏读</strong>，只存在写写互斥。</p>
+
+        <h5 id="2-读已提交"   >
+          <a href="#2-读已提交" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-读已提交" class="headerlink" title="2.读已提交"></a>2.读已提交</h5>
+      <div class="table-container"><table>
+<thead>
+<tr>
+<th></th>
+<th>读</th>
+<th>写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>YES</td>
+<td>YES</td>
+</tr>
+<tr>
+<td>写</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+</tbody></table></div>
+<p>​       在RC中只能读取已提交数据，但是依然没有读写锁。所以导致同一事务在两次读取同一记录产生不一致的情况。也就是<strong>不可重复读</strong>。</p>
+<ol start="3">
+<li>
+        <h5 id="可重复读"   >
+          <a href="#可重复读" class="heading-link"><i class="fas fa-link"></i></a><a href="#可重复读" class="headerlink" title="可重复读"></a>可重复读</h5>
+      </li>
+</ol>
+<div class="table-container"><table>
+<thead>
+<tr>
+<th></th>
+<th>读</th>
+<th>写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读</td>
+<td>YES</td>
+<td>NO</td>
+</tr>
+<tr>
+<td>写</td>
+<td>NO</td>
+<td>NO</td>
+</tr>
+</tbody></table></div>
+<p>​        在RR隔离等级当中出现了读锁，即mysql当中以 <strong>共享锁</strong> 。读锁不互斥，读写锁相互互斥。共享锁可以由多个事务同时获取，但是当两个即以上的事务持有改记录的共享锁时，当前记录是只读的。对于一个不存在的记录是无法进行加锁，当有新纪录加入时，会使一个事务两次读取产生不同的结果，也就是会出现<strong>幻读</strong>。</p>
+<ol start="4">
+<li>
+        <h5 id="可串行化"   >
+          <a href="#可串行化" class="heading-link"><i class="fas fa-link"></i></a><a href="#可串行化" class="headerlink" title="可串行化"></a>可串行化</h5>
+      <p>完全串行化的读，每次读写都需要获得表级共享锁，读写相互都会阻塞。</p>
+</li>
+</ol>
+<blockquote>
+<p>但是在mysql当中一定是这样实现的么？</p>
+</blockquote>
+
+        <h2 id="三-MYSQL当中不同的锁"   >
+          <a href="#三-MYSQL当中不同的锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#三-MYSQL当中不同的锁" class="headerlink" title="三. MYSQL当中不同的锁"></a>三. MYSQL当中不同的锁</h2>
+      
+        <h5 id="1-共享锁"   >
+          <a href="#1-共享锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-共享锁" class="headerlink" title="1.共享锁"></a>1.共享锁</h5>
+      <figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--共享锁</span><br><span class="line">BEGIN;</span><br><span class="line">SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 LOCK IN SHARE MODE;</span><br><span class="line">UPDATE &#96;student&#96; SET &#96;name&#96;&#x3D;&quot;aa1&quot; WHERE &#96;id&#96; &#x3D; 1 ;</span><br><span class="line">COMMIT;</span><br><span class="line">--干扰项</span><br><span class="line">-- BEGIN;</span><br><span class="line">-- SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 LOCK IN SHARE MODE;</span><br><span class="line">-- COMMIT;</span><br></pre></td></tr></table></div></figure>
+
+<p>当有两个以上事务获得同一记录的共享锁时则为只可进行读操作。如干扰项加锁后，第一个事务执行update语句将被blocked掉，直到第二个事务被提交后才可以运行。</p>
+
+        <h5 id="2-记录锁"   >
+          <a href="#2-记录锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-记录锁" class="headerlink" title="2.记录锁"></a>2.记录锁</h5>
+      <figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">--排它锁</span><br><span class="line">BEGIN;</span><br><span class="line">SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 FOR UPDATE;</span><br><span class="line">UPDATE &#96;student&#96; SET &#96;name&#96;&#x3D;&quot;aa1&quot; WHERE &#96;id&#96; &#x3D; 1 ;</span><br><span class="line">COMMIT;</span><br></pre></td></tr></table></div></figure>
+
+<p>记录锁为排它锁，获取锁后其余关于该记录的操作都会被blocked掉。</p>
+<p>当然，如果该条记录有共享锁时，是无法被获取排它锁的。</p>
+
+        <h5 id="3-自增锁"   >
+          <a href="#3-自增锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-自增锁" class="headerlink" title="3.自增锁"></a>3.自增锁</h5>
+      <figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--自增锁</span><br><span class="line">BEGIN;</span><br><span class="line">INSERT INTO &#96;student&#96; (&#96;name&#96;) VALUES(&#39;C1-SE&#39;);</span><br><span class="line">COMMIT;</span><br><span class="line"></span><br><span class="line">BEGIN;</span><br><span class="line">INSERT INTO &#96;student&#96; (&#96;name&#96;) VALUES(&#39;C2-FI&#39;);</span><br><span class="line">COMMIT;</span><br></pre></td></tr></table></div></figure>
+
+<p>执行事务1的插入语句但<strong>不提交</strong>，执行事务二的插入语句后<strong>并提交</strong>，会发现C1-SE的id比C2-F1的id大。</p>
+
+        <h5 id="4-间隙锁"   >
+          <a href="#4-间隙锁" class="heading-link"><i class="fas fa-link"></i></a><a href="#4-间隙锁" class="headerlink" title="4.间隙锁"></a>4.间隙锁</h5>
+      <figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BEGIN;</span><br><span class="line"></span><br><span class="line">SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; &gt; 1 FOR UPDATE;</span><br><span class="line"></span><br><span class="line">SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; BETWEEN 5 AND 7 FOR UPDATE;</span><br><span class="line"></span><br><span class="line">COMMIT;</span><br></pre></td></tr></table></div></figure>
+
+<p>间隙锁，在RR级事务下有效。通过锁一个区域的记录来防止<strong>幻读</strong>。</p>
+
+        <h2 id="四-再回头看MYSQL又是如何解决这些问题？"   >
+          <a href="#四-再回头看MYSQL又是如何解决这些问题？" class="heading-link"><i class="fas fa-link"></i></a><a href="#四-再回头看MYSQL又是如何解决这些问题？" class="headerlink" title="四. 再回头看MYSQL又是如何解决这些问题？"></a>四. 再回头看MYSQL又是如何解决这些问题？</h2>
+      
+        <h5 id="不通过加锁实现可重复读。"   >
+          <a href="#不通过加锁实现可重复读。" class="heading-link"><i class="fas fa-link"></i></a><a href="#不通过加锁实现可重复读。" class="headerlink" title="不通过加锁实现可重复读。"></a>不通过加锁实现可重复读。</h5>
+      <p>通过MVCC来实现读写分离，并解决可重复读问题。</p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">BEGIN ;</span><br><span class="line">SELECT *FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 ;</span><br><span class="line">SELECT *FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 ;</span><br><span class="line">COMMIT;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">BEGIN;</span><br><span class="line">SELECT * FROM &#96;student&#96; WHERE &#96;id&#96; &#x3D; 1 FOR UPDATE;</span><br><span class="line">UPDATE &#96;student&#96; SET &#96;name&#96;&#x3D;&quot;aaa1&quot; WHERE &#96;id&#96; &#x3D; 1 ;</span><br><span class="line">COMMIT;</span><br></pre></td></tr></table></div></figure>
+
+<p>在RR隔离下第二条事务提交前后都进行第一条事务的一次查询，会发现两次的结果都是旧数据，而不是已经更新的数据。</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ END ------</div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://yoursite.com/tags/mysql/">mysql</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/2021/10/07/go-micro%E7%AC%94%E8%AE%B01/"><span class="paginator-prev__text">go micro笔记1</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">Catalog</span><span class="sidebar-nav-ov">Overview</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一-事务的ACID特性"><span class="toc-number">1.</span> <span class="toc-text">
+          一.事务的ACID特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二-事务的隔离等级与其解决的问题"><span class="toc-number">2.</span> <span class="toc-text">
+          二.事务的隔离等级与其解决的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#通过加锁的方式来实现不同的事务隔离级别"><span class="toc-number">2.1.</span> <span class="toc-text">
+          通过加锁的方式来实现不同的事务隔离级别</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#读未提交"><span class="toc-number">2.1.0.1.</span> <span class="toc-text">
+          读未提交</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-读已提交"><span class="toc-number">2.1.0.2.</span> <span class="toc-text">
+          2.读已提交</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#可重复读"><span class="toc-number">2.1.0.3.</span> <span class="toc-text">
+          可重复读</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#可串行化"><span class="toc-number">2.1.0.4.</span> <span class="toc-text">
+          可串行化</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三-MYSQL当中不同的锁"><span class="toc-number">3.</span> <span class="toc-text">
+          三. MYSQL当中不同的锁</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-共享锁"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">
+          1.共享锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-记录锁"><span class="toc-number">3.0.0.2.</span> <span class="toc-text">
+          2.记录锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-自增锁"><span class="toc-number">3.0.0.3.</span> <span class="toc-text">
+          3.自增锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-间隙锁"><span class="toc-number">3.0.0.4.</span> <span class="toc-text">
+          4.间隙锁</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四-再回头看MYSQL又是如何解决这些问题？"><span class="toc-number">4.</span> <span class="toc-text">
+          四. 再回头看MYSQL又是如何解决这些问题？</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#不通过加锁实现可重复读。"><span class="toc-number">4.0.0.1.</span> <span class="toc-text">
+          不通过加锁实现可重复读。</span></a></li></ol></li></ol></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/avatar.png" alt="avatar"></div><p class="sidebar-ov-author__text">white-cc</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">16</div><div class="sidebar-ov-state-item__name">Archives</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">Categories</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">8</div><div class="sidebar-ov-state-item__name">Tags</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="Creative Commons" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">You have read </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>white-cc</span></div><div><span>Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a></span><span> v4.2.1</span><span class="footer__devider">|</span><span>Theme - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.6.2</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script></body></html>
