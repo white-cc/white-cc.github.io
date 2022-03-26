@@ -759,4 +759,28 @@
         <tag>mysql</tag>
       </tags>
   </entry>
+  <entry>
+    <title>用c++实现http服务器1</title>
+    <url>/2022/03/26/%E7%94%A8c++%E5%AE%9E%E7%8E%B0http%E6%9C%8D%E5%8A%A1%E5%99%A81/</url>
+    <content><![CDATA[<blockquote>
+<p>使用c++实现使用socket接口，通过http协议调用CGI的多线程http server</p>
+<a id="more"></a>
+</blockquote>
+
+        <h2 id="HTTP-服务端CGI架构设计"   >
+          <a href="#HTTP-服务端CGI架构设计" class="heading-link"><i class="fas fa-link"></i></a><a href="#HTTP-服务端CGI架构设计" class="headerlink" title="HTTP 服务端CGI架构设计"></a>HTTP 服务端CGI架构设计</h2>
+      <figure class="highlight plain"><div class="table-container"><table><tr><td class="code"><pre><span class="line">Title: CGI调用方式</span><br><span class="line">客户端-&gt;服务端: 发出http请求</span><br><span class="line">服务端-&gt;客户端: 返回http响应</span><br><span class="line">服务端-&gt;CGI: 创建响应线程,fork()子进程，使用pipe与子进程通讯，并重定向输入输出，exec装载对应程序。</span><br><span class="line">CGI-&gt;服务端: 服务器端读取CGI输出，并写入tcp流</span><br><span class="line">Note right of 服务端: 服务端 建立tcp服务端，监听对应端口，根据客户端请求建立起新的线程</span><br></pre></td></tr></table></div></figure>
+
+<ol>
+<li>服务启动时创建TCP的socket，通过bind()绑定对应端口，使用setscokopt设置相应参数,使用listen()来开启监听;</li>
+<li>当accept()获取到客户端的tcp请求创建响应线程，并解析http请求。</li>
+<li>确认为http请求后，如果请求为非CGI，则直接返回对应的文件。                       </li>
+<li>如果为CGI请求，则线程fork()子进程，pipe创建管道，读<code>recv(),</code>写<code>send()</code>字节套，并通过管道与子进程通讯。</li>
+<li>子进程的标准输入输出重定向到管道中，并exec()将对应CGI装载入进程当中。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>web</tag>
+      </tags>
+  </entry>
 </search>
